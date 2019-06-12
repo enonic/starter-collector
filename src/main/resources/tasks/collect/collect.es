@@ -1,18 +1,50 @@
-import {
-	COLLECTION_REPO_PREFIX,
-	REPO_JOURNALS,
-	PRINCIPAL_EXPLORER_WRITE
-} from '/lib/explorer/model/2/constants';
-import {create} from '/lib/explorer/node/create';
-import {connect} from '/lib/explorer/repo/connect';
-import {maybeCreate as maybeCreateRepoAndBranch} from '/lib/explorer/repo/maybeCreate';
-import {currentTimeMillis} from '/lib/explorer/time/currentTimeMillis';
-import {journal as journalType} from '/lib/explorer/nodeTypes/journal';
-import {get as getTask} from '/lib/explorer/task/get';
-import {modify as modifyTask} from '/lib/explorer/task/modify';
-import {progress} from '/lib/explorer/task/progress';
+import {request as httpClientRequest} from '/lib/http-client';
+//import {toStr} from '/lib/util';
+
+import {Collector} from '/lib/explorer/collector';
 
 
 export function run({name, configJson}) {
-	// TODO
+	const collector = new Collector({name, configJson})
+	if (!collector.config.uri) { throw new Error('Config is missing required parameter uri!'); }
+	collector.start();
+
+	const {uri} = collector.config;
+	try {
+		const res = httpClientRequest({
+			url: uri
+		}); //log.info(toStr({res}));
+		if (res.status != 200) {
+			throw new Error(`Status: ${res.status}!`);
+		}
+		const htmlStr = res.body; //log.info(toStr({htmlStr}));
+		const title = res.body.match(/<title>([^<]*?)<\/title>/i)[1]; //log.info(toStr({title}));
+
+		const text = res.body
+			.match(/<body>([\s\S]*?)<\/body>/i)[1]
+			.replace(/<.*?>/g, ' ')
+			.replace(/[\n\r]/g, ' ')
+			.replace(/\s{2,}/g, ' ')
+			.trim();
+		//log.info(toStr({text}));
+
+		collector.persistDocument({
+			title,
+			text,
+			uri
+		});
+	} catch (e) {
+		collector.journal.addError({uri, message: e.message});
+	}
+
+	//──────────────────────────────────────────────────────────────────────────
+	// 6. Delete old nodes
+	//──────────────────────────────────────────────────────────────────────────
+	/*deleteOldNodes({
+		collectionWriteConnection: collectionConnection,
+		journal,
+		seenUrisObj
+	});*/
+
+	collector.stop();
 } // function run

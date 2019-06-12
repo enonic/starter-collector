@@ -3,7 +3,7 @@
   "devDependencies": {
     "@enonic/semantic-ui-react-formik-functional": "^0.1.3",
     "@enonic/webpack-esm-assets": "^0.0.2",
-    "@enonic/webpack-server-side-js": "^0.0.5",
+    "@enonic/webpack-server-side-js": "^0.0.6",
     "formik": "^1.5.7",
     "semantic-ui-react": "^0.87.1"
   },
