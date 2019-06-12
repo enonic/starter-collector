@@ -33,7 +33,7 @@ export function run({name, configJson}) {
 			text,
 			uri
 		});
-		collector.addSuccess({uri: data.uri});
+		collector.addSuccess({uri});
 	} catch (e) {
 		collector.addError({uri, message: e.message});
 	}
