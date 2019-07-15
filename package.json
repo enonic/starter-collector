@@ -1,11 +1,11 @@
 {
   "author": "Christian Andreas Westgaard <cwe@enonic.com>",
   "devDependencies": {
-    "@enonic/semantic-ui-react-formik-functional": "^0.1.3",
+    "@enonic/semantic-ui-react-formik-functional": "^0.1.5",
     "@enonic/webpack-esm-assets": "^0.0.5",
-    "@enonic/webpack-server-side-js": "^0.0.7",
-    "formik": "^1.5.7",
-    "semantic-ui-react": "^0.87.2",
+    "@enonic/webpack-server-side-js": "^0.1.4",
+    "formik": "^1.5.8",
+    "semantic-ui-react": "^0.87.3",
     "terser-webpack-plugin": "^1.3.0"
   },
   "private": true,
