@@ -1,0 +1,15 @@
+= Explorer Collector Starter
+:toc: right
+
+== Create project
+
+```bash
+enonic project create -r enonic/starter-explorer-collector -v 1.0.0-SNAPSHOT -d <destination folder name>
+```
+
+== Deploying
+
+```sh
+cd <destination folder name>
+$ enonic project gradle -- clean build deploy --refresh-dependencies
+```

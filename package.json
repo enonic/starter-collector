@@ -1,8 +1,8 @@
 {
   "author": "Christian Andreas Westgaard <cwe@enonic.com>",
   "devDependencies": {
-    "@enonic/semantic-ui-react-formik-functional": "^0.1.5",
-    "@enonic/webpack-esm-assets": "^0.0.5",
+    "@enonic/semantic-ui-react-formik-functional": "^0.2.4",
+    "@enonic/webpack-esm-assets": "^0.0.8",
     "@enonic/webpack-server-side-js": "^0.1.4",
     "formik": "^1.5.8",
     "semantic-ui-react": "^0.87.3",
