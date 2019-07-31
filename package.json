@@ -12,5 +12,8 @@
   "scripts": {
     "webpack": "node_modules/webpack-cli/bin/cli.js",
     "webpack:watch": "node_modules/webpack-cli/bin/cli.js -w --stdin"
+  },
+  "dependencies": {
+    "yup": "^0.27.0"
   }
 }

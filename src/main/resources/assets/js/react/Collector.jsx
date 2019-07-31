@@ -4,6 +4,8 @@ import {
 } from 'formik';
 import {Input} from '@enonic/semantic-ui-react-formik-functional/dist/index.cjs';
 import {Form} from 'semantic-ui-react';
+//import {useEffect} from 'react'; // Can lead to version mismatch
+import * as Yup from 'yup';
 
 
 const CollectorForm = (props) => {
@@ -45,16 +47,16 @@ const CollectorForm = (props) => {
 } // CollectorForm
 
 
-/*const COLLECTOR_SCHEMA = Yup.object().shape({
-	name: Yup.string()
+const COLLECTOR_SCHEMA = Yup.object().shape({
+	uri: Yup.string()
 		.max(255, 'Too Long!')
 		.required('Required')
-});*/
+});
 
 
 const CollectorFormik = withFormik({
-	mapPropsToValues: (props) => props.values
-	//validationSchema: COLLECTOR_SCHEMA
+	mapPropsToValues: (props) => props.values,
+	validationSchema: COLLECTOR_SCHEMA
 })(CollectorForm);
 
 
