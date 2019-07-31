@@ -4,28 +4,30 @@ import TerserPlugin from 'terser-webpack-plugin';
 import {webpackEsmAssets} from '@enonic/webpack-esm-assets';
 import {webpackServerSideJs} from '@enonic/webpack-server-side-js';
 
-const MODE = 'development';
-//const MODE = 'production';
+//const MODE = 'development';
+const MODE = 'production';
+
+const SS_EXTERNALS = [
+	/^\/lib\/http-client.*$/,
+
+	'/lib/util',
+	/^\/lib\/util\//,
+
+	/^\/lib\/xp\//
+];
+
+const SS_ALIAS = {};
+
+if (MODE === 'production') {
+	SS_EXTERNALS.push(/^\/lib\/explorer\//);
+} else {
+	SS_ALIAS['/lib/explorer'] = path.resolve(__dirname, '../lib-explorer/src/main/resources/lib/explorer/');
+}
 
 const WEBPACK_CONFIG = [
 	webpackServerSideJs({
 		__dirname,
-		externals: [
-			/^\/lib\/http-client.*$/,
-
-			'/lib/util',
-			/^\/lib\/util\//,
-
-			/^\/lib\/xp\//,
-			//^\/lib\/xp\/admin.*$/,
-			//^\/lib\/xp\/auth.*$/,
-			//^\/lib\/xp\/common.*$/,
-			//^\/lib\/xp\/context.*$/,
-			//^\/lib\/xp\/node.*$/,
-			//^\/lib\/xp\/task.*$/,
-			//^\/lib\/xp\/repo.*$/,
-			//^\/lib\/xp\/value.*$/
-		],
+		externals: SS_EXTERNALS,
 		serverSideFiles: [
 			'src/main/resources/main',
 			'src/main/resources/tasks/collect/collect'
@@ -33,19 +35,15 @@ const WEBPACK_CONFIG = [
 		mode: MODE,
 		optimization: {
 			minimizer: [
-				new TerserPlugin({
+				new TerserPlugin(/*{
 					terserOptions: {
-						compress: {},
-						mangle: true // Note `mangle.properties` is `false` by default.
+						compress: {}
+						//mangle: true // This will DESTROY exports!
 					}
-				})
+				}*/)
 			]
 		},
-		resolveAlias: {
-			//'/lib/util': path.resolve(__dirname, '../lib-util/src/main/resources/lib/util'),
-			'/lib/explorer/collector': path.resolve(__dirname, '../lib-explorer-collector/src/main/resources/lib/explorer/collector/'),
-			'/lib/explorer': path.resolve(__dirname, '../lib-explorer/src/main/resources/lib/explorer/')
-		}
+		resolveAlias: SS_ALIAS
 	}),
 	webpackEsmAssets({
 		__dirname,
