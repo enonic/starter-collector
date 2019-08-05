@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 
 const CollectorForm = (props) => {
 	const {
+		dirty,
 		isValid, // Added by withFormik
 		onChange, // Passed as a prop
 		values // Added by withFormik
@@ -23,6 +24,7 @@ const CollectorForm = (props) => {
 	React.useEffect(() => {
 		if (onChange) {
 			onChange({
+				dirty,
 				isValid,
 				values
 			});
