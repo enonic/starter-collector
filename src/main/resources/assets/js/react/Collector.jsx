@@ -11,14 +11,17 @@ import * as Yup from 'yup';
 const CollectorForm = (props) => {
 	const {
 		dirty,
+		/*explorer: {
+			contentTypeOptions,
+			fields,
+			siteOptions
+		},*/
 		isValid, // Added by withFormik
 		onChange, // Passed as a prop
 		values // Added by withFormik
 	} = props;
 	//console.debug('CollectorForm props', props);
 	//console.debug('CollectorForm values', values);
-	//const {contentTypeOptions, fields, siteOptions} = explorer;
-
 
 	// Call onChange every time values changes
 	React.useEffect(() => {
@@ -72,28 +75,3 @@ export const Collector = (props) => {
 			values={values}
 		/>;
 } // Collector
-
-/*
-export const Collector = ({
-	fields,
-	formik,
-	name = 'collector',
-	parentPath,
-	path = parentPath ? `${parentPath}.${name}` : name,
-	value = getIn(formik.values, path, {}),
-}) => {
-	const configPath = `${path}.config`;
-	return <>
-	<Header as='h3' content='Change me in src/main/resources/assets/js/react/Collector.jsx' dividing/>
-		<Form.Field>
-			<Input
-				formik={formik}
-				label='Uri'
-				name='uri'
-				parentPath={configPath}
-				value={getIn(formik.values, `${configPath}.uri`, '')}
-			/>
-			</Form.Field>
-	</>;
-} // Collector
-*/
