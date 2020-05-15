@@ -1,8 +1,7 @@
 import {request as httpClientRequest} from '/lib/http-client';
 //import {toStr} from '/lib/util';
 
-import {Collector} from '/lib/explorer/collector';
-//import {Collector} from '/lib/explorer'; // TODO
+import {Collector} from '/lib/explorer';
 
 
 export function run({
