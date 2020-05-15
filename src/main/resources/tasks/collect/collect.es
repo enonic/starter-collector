@@ -2,10 +2,15 @@ import {request as httpClientRequest} from '/lib/http-client';
 //import {toStr} from '/lib/util';
 
 import {Collector} from '/lib/explorer/collector';
+//import {Collector} from '/lib/explorer'; // TODO
 
 
-export function run({name, configJson}) {
-	const collector = new Collector({name, configJson})
+export function run({
+	name,
+	collectorId,
+	configJson
+}) {
+	const collector = new Collector({name, collectorId, configJson});
 	if (!collector.config.uri) { throw new Error('Config is missing required parameter uri!'); }
 	collector.start();
 

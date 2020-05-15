@@ -19,7 +19,8 @@ const SS_EXTERNALS = [
 const SS_ALIAS = {};
 
 if (MODE === 'production') {
-	SS_EXTERNALS.push(/^\/lib\/explorer\//);
+	SS_EXTERNALS.push(/^\/lib\/explorer/);
+	SS_EXTERNALS.push(/^\/lib\/explorer\/.*/);
 } else {
 	SS_ALIAS['/lib/explorer'] = path.resolve(__dirname, '../lib-explorer/src/main/resources/lib/explorer/');
 }
@@ -50,7 +51,10 @@ const WEBPACK_CONFIG = [
 		assetFiles: [
 			'src/main/resources/assets/js/react/Collector.jsx'
 		],
-		mode: MODE
+		mode: MODE,
+		resolveAlias: {
+			'semantic-ui-react-form': path.resolve(__dirname, './node_modules/@enonic/semantic-ui-react-form/src')
+		}
 	})
 ];
 
