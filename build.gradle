@@ -106,7 +106,7 @@ sourceSets {
 
 
 task webpack(type:NodeTask) {
-	//dependsOn npmInstall
+	dependsOn npmInstall
 	mustRunAfter npmInstall
 	script = file('node_modules/webpack-cli/bin/cli.js')
 	args = [
