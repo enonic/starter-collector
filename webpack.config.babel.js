@@ -2,6 +2,7 @@
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import {webpackEsmAssets} from '@enonic/webpack-esm-assets';
+//import {webpackEsmAssets} from '../webpack-esm-assets/dist/index.js';
 import {webpackServerSideJs} from '@enonic/webpack-server-side-js';
 
 //const MODE = 'development';
