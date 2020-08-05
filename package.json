@@ -2,7 +2,7 @@
   "author": "Christian Andreas Westgaard <cwe@enonic.com>",
   "devDependencies": {
     "@enonic/semantic-ui-react-form": "0.0.4",
-    "@enonic/webpack-esm-assets": "^0.4.0",
+    "@enonic/webpack-esm-assets": "^0.6.1",
     "@enonic/webpack-server-side-js": "^0.1.4",
     "semantic-ui-react": "^0.87.3",
     "terser-webpack-plugin": "^3.0.1",
