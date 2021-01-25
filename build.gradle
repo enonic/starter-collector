@@ -61,7 +61,7 @@ dependencies {
 	//include 'com.enonic.lib:menu:1.3.3'
 	//include 'com.enonic.lib:text-encoding:1.2.0'
 
-	include 'com.enonic.lib:lib-explorer:3.0.1'
+	include 'com.enonic.lib:lib-explorer:3.9.1'
 	include 'com.enonic.lib:lib-util:2.2.0'
 
 	// WARNING: Do NOT use include files, jar file will be missing dependencies!

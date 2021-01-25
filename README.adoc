@@ -13,3 +13,20 @@ enonic project create -r enonic/starter-explorer-collector -v 1.0.0-SNAPSHOT -d 
 cd <destination folder name>
 $ enonic project gradle -- clean build deploy --refresh-dependencies
 ```
+
+== Compatibility
+
+[options="header"]
+|=
+|2.2.2|7.4.1
+|2.2.1|7.2.3
+|=
+
+== Changelog
+
+=== 2.2.2
+
+* semantic-ui-react-form-2.0.3
+* semantic-ui-react-2.0.3
+* lib-explorer-3.9.1
+* Node 12.20.1
