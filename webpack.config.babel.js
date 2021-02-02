@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import path from 'path';
-import TerserPlugin from 'terser-webpack-plugin';
+//import TerserPlugin from 'terser-webpack-plugin';
 import {webpackEsmAssets} from '@enonic/webpack-esm-assets';
 //import {webpackEsmAssets} from '../webpack-esm-assets/dist/index.js';
 import {webpackServerSideJs} from '@enonic/webpack-server-side-js';
+import webpack from 'webpack';
 
 //const MODE = 'development';
 const MODE = 'production';
@@ -17,7 +18,9 @@ const SS_EXTERNALS = [
 	/^\/lib\/xp\//
 ];
 
-const SS_ALIAS = {};
+const SS_ALIAS = {
+	myGlobal: path.resolve(__dirname, 'src/main/resources/global')
+};
 
 if (MODE === 'production') {
 	SS_EXTERNALS.push(/^\/lib\/explorer/);
@@ -36,15 +39,21 @@ const WEBPACK_CONFIG = [
 		],
 		mode: MODE,
 		optimization: {
-			minimizer: [
+			minimize: false
+			/*minimizer: [
 				new TerserPlugin(/*{
 					terserOptions: {
 						compress: {}
 						//mangle: true // This will DESTROY exports!
 					}
-				}*/)
-			]
+				})
+			]*/
 		},
+		plugins: [
+			new webpack.ProvidePlugin({
+				global: 'myGlobal'
+			})
+		],
 		resolveAlias: SS_ALIAS
 	}),
 	webpackEsmAssets({
