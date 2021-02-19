@@ -29,6 +29,7 @@ $ enonic project gradle -- clean build deploy --refresh-dependencies
 
 * Require Enonic 7.5.0
 * Node 14.15.5
+* npm -> yarn
 
 === 2.2.2
 

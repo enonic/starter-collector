@@ -106,8 +106,8 @@ sourceSets {
 
 
 task webpack(type:NodeTask) {
-	dependsOn npmInstall
-	mustRunAfter npmInstall
+	dependsOn yarn_install
+	mustRunAfter yarn_install
 	script = file('node_modules/webpack-cli/bin/cli.js')
 	args = [
 		'--color'
