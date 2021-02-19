@@ -8,8 +8,11 @@ import {
 	setVisited,
 	Form as EnonicForm,
 	Input
-} from 'semantic-ui-react-form';
-
+} from 'semantic-ui-react-form'; // resolve alias
+//from '@enonic/semantic-ui-react-form/src/index.mjs';
+// from '@enonic/semantic-ui-react-form/dist/index.esm.js';
+//from '@enonic/semantic-ui-react-form/dist/index.cjs.js';
+//from '@enonic/semantic-ui-react-form' // package.json main dist/index.umd.js
 
 function required(value) {
 	return value ? undefined : 'Required!';
