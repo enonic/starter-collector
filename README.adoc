@@ -18,11 +18,16 @@ $ enonic project gradle -- clean build deploy --refresh-dependencies
 
 [options="header"]
 |=
+|2.2.3|7.5.0
 |2.2.2|7.4.1
 |2.2.1|7.2.3
 |=
 
 == Changelog
+
+=== 2.2.3
+
+* Require Enonic 7.5.0
 
 === 2.2.2
 
