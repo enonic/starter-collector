@@ -25,6 +25,9 @@ $ enonic project gradle -- clean build deploy --refresh-dependencies
 
 == Changelog
 
+=== 2.2.4-SNAPSHOT
+
+* Node 14.16.0
 === 2.2.3
 
 * Require Enonic 7.5.0
