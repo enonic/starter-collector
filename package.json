@@ -41,7 +41,7 @@
     "@babel/plugin-transform-unicode-escapes": "7.12.13",
     "@babel/plugin-transform-unicode-regex": "7.12.13",
     "@babel/preset-env": "7.13.8",
-    "@babel/preset-react": "7.12.13",
+    "@babel/preset-react": "7.13.13",
     "@babel/register": "7.13.8",
     "@enonic/global-polyfill": "1.0.0",
     "@enonic/semantic-ui-react-form": "2.0.4",
