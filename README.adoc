@@ -25,6 +25,9 @@ $ enonic project gradle -- clean build deploy --refresh-dependencies
 
 == Changelog
 
+=== 2.2.5-SNAPSHOT
+
+* Gradle 5.6.4 -> 6.9
 === 2.2.4-SNAPSHOT
 
 * Node 14.17.0
