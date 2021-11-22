@@ -48,6 +48,7 @@ const SS_EXTERNALS = [
 ];
 
 const SS_ALIAS = {
+	'@enonic/js-utils': path.resolve(__dirname, './node_modules/@enonic/js-utils/dist/cjs/index.js')
 	//myGlobal: path.resolve(__dirname, 'src/main/resources/global')
 };
 

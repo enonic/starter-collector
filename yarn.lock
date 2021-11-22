@@ -1191,6 +1191,11 @@
   resolved "https://registry.yarnpkg.com/@enonic/global-polyfill/-/global-polyfill-1.0.0.tgz#a9393b2efe746a484af95fb1f848b2903b3d38c6"
   integrity sha512-UYw+d/dNC9z8CqrTc9zHzOrDr9xypFN0hu5fhc8dKxdhtvzfsf1EipwG1wB5XRm61G6KOeK/wEM1vqeGM/0dag==
 
+"@enonic/js-utils@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@enonic/js-utils/-/js-utils-0.4.0.tgz#694687676e96f8d227486c32a810c8e7dfcc81f5"
+  integrity sha512-SOigiXWUV3LJkClnVUSv/TdtoqmPPRM7PQe9qWHlFozICr0KSTDiKbNUqVVHPRIZnd8Ewxr4hbhJ9DLyJply/A==
+
 "@enonic/semantic-ui-react-form@2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@enonic/semantic-ui-react-form/-/semantic-ui-react-form-2.4.0.tgz#597a60e32461aa6b074f86ed93e6668b277726ff"

@@ -1,8 +1,11 @@
 {
   "author": "Christian Andreas Westgaard <cwe@enonic.com>",
   "dependencies": {
-    "react": "16.12.0",
-    "react-dom": "16.12.0"
+    "@enonic/js-utils": "0.4.0",
+    "get-value": "3.0.1",
+    "set-value": "4.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
     "@babel/core": "7.16.0",
@@ -60,9 +63,5 @@
   "scripts": {
     "webpack": "node_modules/webpack-cli/bin/cli.js",
     "webpack:watch": "node_modules/webpack-cli/bin/cli.js -w --stdin"
-  },
-  "dependencies": {
-    "get-value": "3.0.1",
-    "set-value": "4.1.0"
   }
 }
