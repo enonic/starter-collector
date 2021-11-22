@@ -1,0 +1,6 @@
+[{
+	"componentPath": "window.LibCollector.Collector",
+	"configAssetPath": "js/react/Collector.esm.js",
+	"displayName": "Starter (Change me in src/main/resources/collectors.json)",
+	"taskName": "collect"
+}]

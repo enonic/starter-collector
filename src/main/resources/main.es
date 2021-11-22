@@ -1,16 +1,21 @@
-import {register, unregister} from '/lib/explorer/collector';
+import {
+	//register,
+	unregister
+} from '/lib/explorer/collector';
 
 
-register({
+unregister({
 	appName: app.name,
-	configAssetPath: 'js/react/Collector.esm.js',
-	componentPath: 'window.LibCollector.Collector',
-	displayName: 'Starter (Change me in src/main/resources/main.es)'
+	//componentPath: 'window.LibCollector.Collector',
+	//configAssetPath: 'js/react/Collector.esm.js',
+	collectTaskName: 'collect'//,
+	//displayName: 'Starter (Change me in src/main/resources/main.es)'
 });
 
 
-__.disposer(() => {
+/*__.disposer(() => {
 	unregister({
-		appName: app.name
+		appName: app.name,
+		collectTaskName: 'collect'
 	});
-});
+});*/
