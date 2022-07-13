@@ -1,0 +1,43 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"declaration": false,
+		"declarationMap": false,
+		"jsx": "react-jsx",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noEmit": true,
+		"outDir": "build/tsc",
+		"paths": {
+			"@enonic/js-utils/*": ["./node_modules/@enonic/js-utils/src/*"],
+			"/lib/explorer": ["../lib-explorer/src/main/resources/lib/explorer"],
+			"/lib/explorer/*": ["../lib-explorer/src/main/resources/lib/explorer/*"],
+		},
+		"pretty": true,
+		"removeComments": true,
+		"rootDir": "../",
+		"rootDirs": [
+			"src/main/resources",
+			"../lib-explorer"
+		],
+
+		// Even though the setting disables type checking for d.ts files,
+		// TypeScript still type checks the code you specifically
+		// refer to in your application's source code.
+		"skipLibCheck": true, // Disable type checking for node_modules
+
+		"sourceMap": false,
+		"target": "es5",
+		"types": [
+			"node",
+			"react"
+		]
+  },
+	"exclude": [
+		"**/*.d.ts"
+	],
+	"include": [
+		"./src/main/resources/**/*.ts",
+		"./src/main/resources/**/*.tsx"
+	]
+}
