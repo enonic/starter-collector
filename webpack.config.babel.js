@@ -65,8 +65,7 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 	context: path.resolve(__dirname, SRC_DIR),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: {
-		'main' : './main.es',
-		'tasks/collect/collect' : './tasks/collect/collect.es'
+		'tasks/collect/collect' : './tasks/collect/collect.ts'
 	},
 	externals: SS_EXTERNALS,
 	mode: MODE,
@@ -121,7 +120,7 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 						'array-includes'
 					], // plugins
 					presets: [
-						//'@babel/preset-typescript', // Why did I ever add this???
+						'@babel/preset-typescript',
 						[
 							'@babel/preset-env',
 							{
@@ -171,6 +170,7 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 	resolve: {
 		alias: SS_ALIAS,
 		extensions: [
+			'ts',
 			//'mjs',
 			//'jsx',
 			//'esm',
@@ -197,7 +197,7 @@ const CLIENT_SIDE_ES_CONFIG = {
 	context: path.join(__dirname, SRC_ASSETS_DIR, 'js', 'react'),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: {
-		'Collector': './Collector.jsx'
+		'Collector': './Collector.tsx'
 	},
 	externals: {
 		react: 'React',
@@ -210,10 +210,21 @@ const CLIENT_SIDE_ES_CONFIG = {
 				/node_modules[\\/]core-js/, // will cause errors if they are transpiled by Babel
 				/node_modules[\\/]webpack[\\/]buildin/ // will cause errors if they are transpiled by Babel
 			],
-			test: /\.jsx$/,
+			test: /\.tsx?$/,
 			loader: 'esbuild-loader',
 			options: {
-				loader: 'jsx', // Remove this if you're not using JSX
+				loader: 'tsx',
+				target: ES_BUILD_TARGET
+			}
+		},{
+			exclude: [ // It takes time to transpile, if you know they don't need transpilation to run in Enonic you may list them here:
+				/node_modules[\\/]core-js/, // will cause errors if they are transpiled by Babel
+				/node_modules[\\/]webpack[\\/]buildin/ // will cause errors if they are transpiled by Babel
+			],
+			test: /\.jsx?$/,
+			loader: 'esbuild-loader',
+			options: {
+				loader: 'jsx',
 				target: ES_BUILD_TARGET
 			}
 		}]
@@ -244,12 +255,17 @@ const CLIENT_SIDE_ES_CONFIG = {
 		new ESBuildPlugin()
 	],
 	resolve: {
-		alias: {
-			'semantic-ui-react-form': MODE === 'development'
-				? path.resolve(__dirname, '../semantic-ui-react-form/src/index.mjs')
-				: path.resolve(__dirname, './node_modules/@enonic/semantic-ui-react-form/src/index.mjs')
-		},
-		extensions: ['mjs', 'jsx', 'esm', 'es', 'es6', 'js', 'json'].map(ext => `.${ext}`)
+		extensions: [
+			'tsx',
+			'ts',
+			'mjs',
+			'jsx',
+			'esm',
+			'es',
+			'es6',
+			'js',
+			'json'
+		].map(ext => `.${ext}`)
 	},
 	stats: STATS
 };

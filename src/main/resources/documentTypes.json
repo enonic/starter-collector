@@ -1,0 +1,38 @@
+[{
+	"_name": "starter_explorer_collector_document_type",
+	"addFields": false,
+	"properties": [{
+		"active": true,
+		"enabled": true,
+		"fulltext": true,
+		"includeInAllText": true,
+		"max": 0,
+		"min": 0,
+		"name": "text",
+		"nGram": true,
+		"path": false,
+		"valueType": "string"
+	},{
+		"active": true,
+		"enabled": true,
+		"fulltext": true,
+		"includeInAllText": true,
+		"max": 0,
+		"min": 0,
+		"name": "title",
+		"nGram": true,
+		"path": false,
+		"valueType": "string"
+	},{
+		"active": true,
+		"enabled": true,
+		"fulltext": true,
+		"includeInAllText": false,
+		"max": 0,
+		"min": 1,
+		"name": "url",
+		"nGram": false,
+		"path": false,
+		"valueType": "string"
+	}]
+}]
