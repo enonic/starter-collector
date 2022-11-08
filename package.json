@@ -1,7 +1,7 @@
 {
   "author": "Christian Andreas Westgaard <cwe@enonic.com>",
   "dependencies": {
-    "@enonic/js-utils": "0.4.0",
+    "@enonic/js-utils": "0.43.0",
     "get-value": "3.0.1",
     "react": "^18",
     "react-dom": "^18",
@@ -52,7 +52,7 @@
     "@enonic/global-polyfill": "^1",
     "@enonic/semantic-ui-react-form": "^2",
     "@types/react": "^18.0.15",
-    "babel-loader": "^8",
+    "babel-loader": "^9",
     "babel-plugin-array-includes": "^2",
     "core-js": "^3",
     "esbuild-loader": "^2",
