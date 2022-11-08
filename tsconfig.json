@@ -9,7 +9,10 @@
 		"noEmit": true,
 		"outDir": "build/tsc",
 		"paths": {
+			// Production (should be commented in when commiting)
 			"@enonic/js-utils/*": ["./node_modules/@enonic/js-utils/src/*"],
+			"/lib/xp/node": ["node_modules/@enonic-types/lib-node"],
+			// Lib-explorer types is not YET available as an npm module, so these types depend upon what you have checked out locally
 			"/lib/explorer": ["../lib-explorer/src/main/resources/lib/explorer"],
 			"/lib/explorer/*": ["../lib-explorer/src/main/resources/lib/explorer/*"],
 		},
@@ -28,7 +31,13 @@
 
 		"sourceMap": false,
 		"target": "es5",
+		"typeRoots": [
+			"node_modules/@types",
+			"node_modules/@enonic-types",
+		],
 		"types": [
+			"@enonic-types/global",
+			"@enonic-types/lib-node",
 			"node",
 			"react"
 		]

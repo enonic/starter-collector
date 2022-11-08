@@ -72,13 +72,11 @@ export function run({
 			documentTypeName: 'starter_explorer_collector_document_type'
 		});
 		collector.addSuccess({
-			uri: url
+			message: url
 		});
 	} catch (e) {
-		collector.addError({
-			uri: url,
-			message: e.message
-		});
+		log.error(`url:${url} message:${e.message}`, e);
+		collector.addError({message: `url:${url} ${e.message}`});
 	}
 
 	//──────────────────────────────────────────────────────────────────────────

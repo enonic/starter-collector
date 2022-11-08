@@ -1238,6 +1238,23 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.2.tgz#8f03a22a04de437254e8ce8cc84ba39689288752"
   integrity sha512-HyYEUDeIj5rRQU2Hk5HTB2uHsbRQpF70nvMhVzi+VJR0X+xNEhjPui4/kBf3VeH/wqD28PT4sVOm8qqLjBrSZg==
 
+"@enonic-types/core@7.11.0":
+  version "7.11.0"
+  resolved "https://registry.yarnpkg.com/@enonic-types/core/-/core-7.11.0.tgz#f307e1803656452bb93d8760374563f305175e1a"
+  integrity sha512-05u/BLlOaZK9zaqjCTV+w9gsrLkhwnp6oy0/14VXFKOkg3vCWNbqSsuStNAfguGqLSJOB0/nVU0yvbD1g5FT9Q==
+
+"@enonic-types/global@^7.11.0":
+  version "7.11.0"
+  resolved "https://registry.yarnpkg.com/@enonic-types/global/-/global-7.11.0.tgz#17fd8890f0bae4041fc472a4f6cbf61d369e9eee"
+  integrity sha512-wVsLS3wmkNWlhVXBmAAYG99LEjI0vKch/oPn0SgQeOioul/2Bo+cPZ1JDjNoHd5mixkddIXvQlHEmAK7nc0wrQ==
+
+"@enonic-types/lib-node@^7.11.0":
+  version "7.11.0"
+  resolved "https://registry.yarnpkg.com/@enonic-types/lib-node/-/lib-node-7.11.0.tgz#8ef1306a92f99e4344d14887e92e9ddd244a36b6"
+  integrity sha512-oqCktyegqnhj6ChELRCJZQJTTPfOnZpQCvMonNFPRSkACBz5bzuJvzAmjs+WTDhOYIliqkfJW1+at0uhPS8gnw==
+  dependencies:
+    "@enonic-types/core" "7.11.0"
+
 "@enonic/global-polyfill@^1":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@enonic/global-polyfill/-/global-polyfill-1.0.0.tgz#a9393b2efe746a484af95fb1f848b2903b3d38c6"

@@ -47,6 +47,8 @@
     "@babel/preset-react": "^7",
     "@babel/preset-typescript": "^7",
     "@babel/register": "^7",
+    "@enonic-types/global": "^7.11.0",
+    "@enonic-types/lib-node": "^7.11.0",
     "@enonic/global-polyfill": "^1",
     "@enonic/semantic-ui-react-form": "^2",
     "@types/react": "^18.0.15",
