@@ -63,7 +63,7 @@ dependencies {
 	//include 'com.enonic.lib:text-encoding:1.2.0'
 
 	include "com.enonic.lib:lib-explorer:${libExplorerVersion}"
-	include 'com.enonic.lib:lib-util:2.2.0'
+	include 'com.enonic.lib:lib-util:3.1.1'
 
 	// WARNING: Do NOT use include files, jar file will be missing dependencies!
 }
