@@ -4,17 +4,19 @@ import {
 	ESBuildPlugin
 } from 'esbuild-loader';
 import path from 'path';
-//import {print} from 'q-i';
+import {print} from 'q-i';
 //import TerserPlugin from 'terser-webpack-plugin';
 
 import webpack from 'webpack';
 
+if (process.env.LOG_LEVEL_FROM_GRADLE === 'INFO') {
+	print({NODE_ENV: process.env.NODE_ENV});
+}
 
 //──────────────────────────────────────────────────────────────────────────────
 // Common
 //──────────────────────────────────────────────────────────────────────────────
-const MODE = 'development';
-//const MODE = 'production';
+const MODE = process.env.NODE_ENV || 'production';
 
 const minimize = MODE === 'production';
 //const minimize = true;
@@ -256,7 +258,9 @@ WEBPACK_CONFIG.push(CLIENT_SIDE_ES_CONFIG);
 //──────────────────────────────────────────────────────────────────────────────
 // Common
 //──────────────────────────────────────────────────────────────────────────────
-//print({WEBPACK_CONFIG}, { maxItems: Infinity });
-//process.exit();
+if (process.env.LOG_LEVEL_FROM_GRADLE === 'INFO') {
+	print({WEBPACK_CONFIG}, { maxItems: Infinity });
+}
+// process.exit();
 
 export { WEBPACK_CONFIG as default };
