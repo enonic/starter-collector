@@ -3,9 +3,9 @@
   "dependencies": {
     "@enonic/js-utils": "0.4.0",
     "get-value": "3.0.1",
-    "set-value": "4.1.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "set-value": "4.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.16.0",
