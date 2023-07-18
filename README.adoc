@@ -4,7 +4,7 @@
 == Create project
 
 ```bash
-enonic project create -r enonic/starter-explorer-collector -v 1.0.0-SNAPSHOT -d <destination folder name>
+enonic project create -r enonic/starter-collector -v 1.0.0-SNAPSHOT -d <destination folder name>
 ```
 
 == Deploying
