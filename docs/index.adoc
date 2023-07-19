@@ -3,11 +3,14 @@
 
 == Introduction
 
-Collectors are implemented as standard XP applications. They essentially consist of two main components:
+NOTE: This documentation assumes you are already familiar with Enonic application developmentm. If not? Start with https://developer.enonic.com/start[the fundamentals].
 
-Form:: A React based user interface that enable search administrators to instruct the collector in it's specific activities.
 
-Task:: Code that performs the actual retrieval of content for indexing.
+Collectors are implemented as standard XP applications. They essentially consist of two main ingredients:
+
+A task:: Code that performs the actual retrieval of data for indexing.
+
+A form:: A React based user interface that enable search administrators to configure the collector for a specific collection.
 
 This section will guide you through the basic steps of building your own custom collector.
 
@@ -15,7 +18,7 @@ This section will guide you through the basic steps of building your own custom 
 
 Use Enonic CLI to create an application based on the vanilla starter:
 
-	enonic project create -r starter-explorer-collector
+	enonic project create -r starter-collector
 
 The starter ships with the essential setup required for any collector:
 
