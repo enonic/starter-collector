@@ -1,0 +1,532 @@
+= Building a custom collector
+:toc: right
+
+== Introduction
+
+Collectors are implemented as standard XP applications. They essentially consist of two main components:
+
+Form:: A React based user interface that enable search administrators to instruct the collector in it's specific activities.
+
+Task:: Code that performs the actual retrieval of content for indexing.
+
+This section will guide you through the basic steps of building your own custom collector.
+
+== Step 1: Create application
+
+Use Enonic CLI to create an application based on the vanilla starter:
+
+	enonic project create -r starter-explorer-collector
+
+The starter ships with the essential setup required for any collector:
+
+=== Dependencies
+
+.build.gradle
+[source,java]
+----
+dependencies {
+	include 'com.enonic.lib:lib-explorer:3.20.1'
+
+	// Needed by lib-explorer (or lib-util)?
+	include "com.enonic.xp:lib-cluster:${xpVersion}"
+	include "com.enonic.xp:lib-context:${xpVersion}"
+	include "com.enonic.xp:lib-event:${xpVersion}"
+	include "com.enonic.xp:lib-i18n:${xpVersion}"
+	include "com.enonic.xp:lib-mail:${xpVersion}"
+	include "com.enonic.xp:lib-node:${xpVersion}"
+	include "com.enonic.xp:lib-portal:${xpVersion}"
+	include "com.enonic.xp:lib-repo:${xpVersion}"
+}
+----
+
+NOTE: Remember to use a version of the library that is equal to or newer than the version of Explorer you are using.
+
+=== Collectors.json
+
+You can include multiple collectors in a single enonic xp application.
+If you only include one, the collectors.json file should still contain an array with a single object entry.
+
+Each collector needs to have it's own unique library name so react can access it on the window object.
+
+.webpack.config.babel.js
+[source,java]
+----
+const config = {
+	entry: {
+		'MyCollectorNameA': './CollectorA.jsx',
+		'MyCollectorNameB': './CollectorB.jsx',
+	},
+	output: {
+		filename: '[name].esm.js',
+		library: 'Lib[name]',
+		libraryTarget: 'var',
+	}
+}
+----
+
+./src/main/resources/collectors.json
+[source,json]
+----
+[{
+	"componentPath": "window.LibMyCollectorNameA.Collector",
+	"configAssetPath": "react/MyCollectorNameA.esm.js",
+	"displayName": "My collector A",
+	"taskName": "collectA"
+},{
+	"componentPath": "window.LibMyCollectorNameB.Collector",
+	"configAssetPath": "react/MyCollectorNameB.esm.js",
+	"displayName": "My collector B",
+	"taskName": "collectB"
+}]
+----
+
+
+=== Register (DEPRECATED) / Unregister
+
+The register function has now been deprecated, but has been improved to detect installed version app-explorer.
+So if you want your collector to work on app-explorer versions<1.5.0 just keep the register call.
+
+In order for Explorer to detect available collectors, each collector needs to register:
+
+.main.es
+[source,java]
+----
+import {register} from '/lib/explorer';
+
+register({
+	appName: app.name,
+	collectTaskName: 'collect',
+	configAssetPath: 'react/Collector.esm.js',
+	displayName: 'My collector'
+});
+----
+
+=== Unregister (NOT DEPRECATED YET)
+
+Unregister is not deprecated yet in order to remove old registrations.
+
+In order for Explorer to detect available collectors, each collector needs to unregister itself:
+
+.main.es
+[source,java]
+----
+import {unregister} from '/lib/explorer';
+
+__.disposer(() => {
+	unregister({
+		appName: app.name,
+		collectTaskName: 'collect'
+	});
+});
+----
+
+
+== Step 2: React form
+
+The starter also provides the essential build system for the React-based user interface.
+
+Some important ingredients that enable this are:
+
+- node-gradle-plugin
+- webpack
+- babel
+- node_modules
+  * @enonic/semantic-ui-react-form
+  * @enonic/webpack-esm-assets
+  * @enonic/webpack-server-side-js
+	* get-value
+	* semantic-ui-react
+	* set-value
+
+=== React component
+
+In order for your collector's configuration user interface to work in Explorer you must provide a React component.
+Any react component type should be supported, but all examples are functional (since that is the current status quo of react).
+
+The component receives five props from Explorer:
+. context - Read only object which are change via dispatching actions to its state reducer.
+. dispatch - Function to send actions to the state reducer.
+. explorer - static information like contentTypes, fields and sites
+. isFirstRun - Use this to only do things once during initialization of your form. (And not on every render)
+. path - Where your form is located in the context object.
+
+==== context object
+
+This object contains a lot of data used to maintain state by semantic-ui-react-form.
+In most cases knowing about its values property should be enough.
+
+==== dispatch function
+
+You can import various reducer actions from semantic-ui-react-form and send the to the reducer using the dispatch function.
+
+==== explorer object
+
+This object contains information from Explorer about the collector context. The information can be used to make dropdowns in your collectors configuration.
+
+==== isFirstRun
+
+This is a React ref object whose .current property is initialized to true. If you have any code that should only run once on initialization of you collector component, you can use this object to achieve this. Here is some example code:
+
+[source,javascript]
+----
+import getIn from 'get-value';
+
+export const Collector = ({
+	context,
+	isFirstRun,
+	path
+}) => {
+	let initialValues = getIn(context.values, path);
+	if (isFirstRun.current) {
+		isFirstRun.current = false; // Make sure the code block never runs again.
+		if (!initialValues) {
+			initialValues = {
+				aProperty: 'defaultValueForProperty',
+			}
+		}
+	} // if isFirstRun
+} // Collector
+----
+
+You can read more about React ref objects here: https://reactjs.org/docs/hooks-reference.html#useref
+
+==== path
+
+Use to this to fetch your form values and also when dispatching actions to the state reducer.
+
+==== Example
+
+.src/resources/assets/js/react/Collector.jsx
+[source,jsx]
+----
+import getIn from 'get-value';
+import setIn from 'set-value';
+import {Button, Form, Header, Icon, Table} from 'semantic-ui-react';
+import {
+	setError,
+	setSchema,
+	setValue,
+	setVisited,
+	DeleteItemButton,
+	Form as EnonicForm,
+	Input,
+	InsertButton,
+	List,
+	MoveDownButton,
+	MoveUpButton,
+	SetValueButton
+} from 'semantic-ui-react-form';
+
+function required(value) {
+	return value ? undefined : 'Required!';
+}
+
+const SCHEMA = {
+	uri: (v) => required(v)
+};
+
+export const Collector = (props) => {
+	const {
+		context,
+		dispatch,
+		explorer,
+		isFirstRun,
+		path
+	} = props;
+	let initialValues = getIn(context.values, path);
+	if (isFirstRun.current) {
+		//console.debug('isFirstRun');
+		isFirstRun.current = false;
+		dispatch(setSchema({path, schema: SCHEMA}));
+		if (!initialValues) {
+			initialValues = {
+				uri: ''
+			};
+			dispatch(setValue({path, value: initialValues}));
+		}
+		return <EnonicForm
+			initialValues={initialValues}
+			onChange={(values) => {
+				//console.debug('Collector onChange values', values);
+				dispatch(setValue({path, value: values}));
+			}}
+			schema={SCHEMA}
+		>
+			<Form as='div'>
+				<Form.Field>
+					<Input
+						fluid
+						label='Uri'
+						path='uri'
+					/>
+				</Form.Field>
+			</Form>
+		</EnonicForm>;
+};
+----
+
+== Step 3: Collector task
+
+The actual code to retrieve and return content for indexing is implemented using https://developer.enonic.com/docs/xp/stable/framework/tasks[named tasks].
+
+
+The most important parts of a collector are:
+
+=== Progress reporting
+
+In the explorer app there is a page to display Collector status.
+In order for this page to show useful updated information.
+The collector tasks needs to send progress information.
+When your collector task runs
+[source,javascript]
+----
+collector.start();
+----
+
+A collector.taskProgressObj will be created automatically. Looking something like this:
+
+[source,javascript]
+----
+collector.taskProgressObj = {
+	current: 0,
+	info: {
+		name: 'Example',
+		message: 'Initializing...',
+		startTime: '2020...'
+	},
+	total: 1 // So it appears there is something to do.
+}
+----
+
+A collector task may have a set or changing number of operations to perform.
+You should keep the progress updated something like this:
+
+[source,javascript]
+----
+collector.start();
+collector.taskProgressObj.total = initialNumberOfOperations;
+while(somethingToDo) {
+	collector.taskProgressObj.info.uri = currentUri;
+	collector.taskProgressObj.info.message = 'Some useful information';
+	collector.progress(); // This will update task progress. So it can be seen.
+
+	// ... do stuff ...
+
+	collector.taskProgressObj.total += foundSomeMoreOperationsToPerform;
+
+	collector.taskProgressObj.current += 1;
+}
+collector.stop();
+----
+
+
+Finally when you collector task calls
+[source,javascript]
+----
+collector.stop();
+----
+
+It will set current = total and a nice info.message = `Finished with ${x} errors.`;
+
+=== Journal
+
+When a collector task is finished. A journal will be persisted.
+The journal contains information about things that went well, and possible errors.
+Write to the journal by using *addSuccess* or *addError* like this:
+
+[source,javascript]
+----
+try {
+	// ... do some stuff that could fail ...
+	collector.addSuccess({uri: currentUri});
+} catch (e) {
+	collector.addError({uri: currentUri, message: e.message});
+}
+----
+
+=== CRUD
+
+When you have collected some information you want to make available for later search you have to persist it.
+This can be done by calling *persistDocument* like this:
+
+[source,javascript]
+----
+collector.persistDocument({
+	aField: 'aTag', // Optional, perhaps used in aggregation and filtering.
+	anotherField: 'anotherTag', // Optional, perhaps used in aggregation and filtering.
+	text, // Required!
+	title, // Required!
+	uri, // Required!
+	whatever: 'perhapsAnImageUrl' // Optional, perhaps used when displaying search results.
+});
+----
+
+The explorer library Collection class currently does not provide any api for reading and deleting documents.
+You may connect to the collection repositories via standard Enonic API's or via other currently undocumented Explorer library functions.
+
+=== Example code
+
+The complexity of a collector may vary, but as to provide a basic idea, the starter includes a simple example:
+
+.src/resources/tasks/collect.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<task>
+	<description>Collect</description>
+	<form>
+		<input name="name" type="TextLine">
+			<label>Name</label>
+			<occurrences minimum="1" maximum="1"/>
+		</input>
+		<input name="collectorId" type="TextLine">
+			<label>Collector ID</label>
+			<occurrences minimum="1" maximum="1"/>
+		</input>
+		<input name="configJson" type="TextLine">
+			<label>Config JSON</label>
+			<occurrences minimum="1" maximum="1"/>
+		</input>
+		<input name="language" type="TextLine">
+			<label>Language</label>
+			<occurrences minimum="0" maximum="1"/>
+		</input>
+	</form>
+</task>
+----
+
+.src/resources/tasks/collect.es
+[source,javascript]
+----
+import '@enonic/nashorn-polyfills'; <--1-->
+import {Collector} from '/lib/explorer/collector'; <--2-->
+
+export function run({name, collectorId, configJson, language}) { <--3-->
+	const collector = new Collector({name, collectorId, configJson, language}); <--4-->
+
+	if (!collector.config.uri) { <--5-->
+		throw new Error('Config is missing required parameter uri!');
+	}
+
+	collector.start(); <--6-->
+
+	const {
+		uri,
+		object: {
+			someNestedProperty
+		}
+	} = collector.config; <--7-->
+
+	while(somethingToDo) {
+		if (collector.shouldStop()) { break; } <--8-->
+
+		try {
+			const {text, title} = doSomethingThatMayFail(); <--9-->
+
+			collector.persistDocument({
+				text,
+				title,
+				uri
+			}); <--10-->
+
+			collector.addSuccess({uri}); <--11-->
+
+		} catch (e) {
+
+			collector.addError({uri, message: e.message}); <--12-->
+
+		}
+	} // while somethingToDo
+
+	// Perhaps delete documents that are no longer found...
+
+	collector.stop(); <--13-->
+
+} // export function run
+----
+
+<1> Perhaps import <<_polyfills,polyfills>>.
+<2> Import the Collector class
+<3> The collect task gets passed four named parameters.
+<4> Construct a Collector instance.
+<5> Validate the configuration object.
+<6> Start the collector. Sets startTime and more.
+<7> Fetch configuration properties you need from the collector.config object.
+<8> Check if someone has clicked the STOP button.
+<9> This is where you collect the data you want to persist.
+<10> Persist the collected data.
+<11> Make a journal entry that collecting data from uri was a success.
+<12> Make a journal entry that an error prevented collecting data from uri.
+<13> Stop the collector. Sets endTime and more.
+
+=== Polyfills
+
+Depending upon what your Enonic XP serverside code contains, or potential node modules you import, you may have to polyfill some js functionality that the Javascript engine (Nashorn) doesn't support.
+
+.src/resources/lib/nashorn/index.js
+[source,javascript]
+----
+require './global';
+require './Array';
+require './Number';
+----
+
+.webpack.config.babel.js
+[source,java]
+----
+import path from 'path';
+const WEBPACK_CONFIG = {
+	resolve: {
+		alias: '@enonic/nashorn-polyfills': path.resolve(__dirname, 'src/main/resources/lib/nashorn/index.js')
+	}
+}
+export { WEBPACK_CONFIG as default };
+----
+
+==== Global
+.src/resources/lib/nashorn/global.js
+[source,javascript]
+----
+// https://stackoverflow.com/questions/9107240/1-evalthis-vs-evalthis-in-javascript
+const global = (1, eval)('this'); // eslint-disable-line no-eval
+global.global = global;
+global.globalThis = global;
+global.frames = global;
+global.self = global;
+global.window = global;
+module.exports = global;
+----
+
+==== Array.flat
+.src/resources/lib/nashorn/Array.js
+[source,javascript]
+----
+if (!Array.prototype.flat) {
+	Object.defineProperty(Array.prototype, 'flat', {
+		value: function(depth = 1) {
+			return this.reduce(function (flat, toFlatten) {
+				return flat.concat((Array.isArray(toFlatten) && (depth>1)) ? toFlatten.flat(depth-1) : toFlatten);
+			}, []);
+		}
+	});
+}
+----
+
+==== Number.isInteger
+
+.src/resources/lib/nashorn/Number.js
+[source,javascript]
+----
+Number.isInteger = Number.isInteger || function(value) {
+	return typeof value === 'number' &&
+	isFinite(value) &&
+	Math.floor(value) === value;
+};
+----
+
+== Step 4: Install and test
+
+When you have built your collector application.
+Install the jar file on the Enonic XP server where you have Explorer installed.
+Then create a collection using your collector, and click collect to see what happens.
+It is a good idea to run locally first and keep an eye on the Enonic XP server log.
