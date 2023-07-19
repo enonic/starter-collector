@@ -1,13 +1,19 @@
 = Explorer Collector Starter
 :toc: right
 
-== Create project
+== Documentation
 
+Detailed documentation on using this starter is available on the developer portal: https://developer.enonic.com/docs/collector[Building custom collectors]
+
+
+== Usage
+
+=== Create project
 ```bash
 enonic project create -r enonic/starter-collector -v 1.0.0-SNAPSHOT -d <destination folder name>
 ```
 
-== Deploying
+=== Build and deploy
 
 ```sh
 cd <destination folder name>
