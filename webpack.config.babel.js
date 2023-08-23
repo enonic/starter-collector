@@ -1,11 +1,8 @@
 /* eslint-disable no-console */
-import {
-	ESBuildMinifyPlugin,
-	ESBuildPlugin
-} from 'esbuild-loader';
+import { EsbuildPlugin } from 'esbuild-loader';
 import path from 'path';
-import {print} from 'q-i';
-//import TerserPlugin from 'terser-webpack-plugin';
+import { print } from 'q-i';
+// import TerserPlugin from 'terser-webpack-plugin';
 
 import webpack from 'webpack';
 
@@ -234,7 +231,7 @@ const CLIENT_SIDE_ES_CONFIG = {
 		minimizer: MODE === 'development'
 			? []
 			: [
-				new ESBuildMinifyPlugin({
+				new EsbuildPlugin({
 					target: ES_BUILD_TARGET
 				})
 			]
@@ -252,7 +249,7 @@ const CLIENT_SIDE_ES_CONFIG = {
 		/*new webpack.ProvidePlugin({
 			Buffer: ['buffer', 'Buffer']
 		}),*/
-		new ESBuildPlugin()
+		new EsbuildPlugin()
 	],
 	resolve: {
 		extensions: [
