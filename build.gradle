@@ -25,8 +25,8 @@ app {
 
 
 dependencies {
-	compile "com.enonic.xp:core-api:${xpVersion}"
-	compile "com.enonic.xp:portal-api:${xpVersion}"
+	implementation "com.enonic.xp:core-api:${xpVersion}"
+	implementation "com.enonic.xp:portal-api:${xpVersion}"
 
 	//──────────────────────────────────────────────────────────────────────────
 	// Core libs (com.enonic.xp)
