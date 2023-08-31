@@ -1,4 +1,5 @@
 = Build a custom Collector for Explorer
+:sectnums:
 :toc: right
 :toclevels: 6
 :enonicStart: https://developer.enonic.com/start
@@ -40,6 +41,8 @@ A sandbox is a local developer instance of our platform - Enonic XP. Create a sa
   enonic sandbox create
 
 Give it a name, i.e. `intro`, and select the most recent version of Enonic XP from the list that appears.
+
+=== Start the Sandbox
 
 Start the sandbox with this command:
 
@@ -111,329 +114,51 @@ From the project folder created (i.e. `myproject/`), run this command:
 
 This command copies the .jar file from the `build/libs/` folder into the sandbox home deploy folder.
 
-== Development
-
-=== Including the Explorer Library
-
-This should already be set up in the starter.
-
-.build.gradle
-[source,gradle]
-----
-dependencies {
-    include 'com.enonic.lib:lib-explorer:4.0.0'
-}
-----
-
-=== Configure collectors.json
-
-You can include multiple collectors in a single enonic xp application.
-If you only include one, the collectors.json file should still contain an array with a single object entry.
-
-Each collector needs to have it's own unique library name so React can access it on the window object.
-
-The library name must match up between webpack.config.babel.js and src/main/resources/collectors.json
-
-.webpack.config.babel.js
-[source,java]
-----
-const config = {
-    entry: {
-        'MyCollectorNameA': './CollectorA.jsx',
-        'MyCollectorNameB': './CollectorB.jsx',
-    },
-    output: {
-        filename: '[name].esm.js',
-        library: 'Lib[name]',
-        libraryTarget: 'var',
-    }
-}
-----
-
-./src/main/resources/collectors.json
-[source,json]
-----
-[{
-    "componentPath": "window.LibMyCollectorNameA.Collector",
-    "configAssetPath": "react/MyCollectorNameA.esm.js",
-    "displayName": "My collector A",
-    "taskName": "collectA"
-},{
-    "componentPath": "window.LibMyCollectorNameB.Collector",
-    "configAssetPath": "react/MyCollectorNameB.esm.js",
-    "displayName": "My collector B",
-    "taskName": "collectB"
-}]
-----
-
-=== Configure documentTypes.json
-
-You can include multiple document-types in a single enonic xp application.
-If you only include one, the documentTypes.json file should still contain an array with a single object entry.
-
-Each document-type must have a unique _name property.
-
-Those document-type names can then be used when persisting documents in you collector task code.
-
-./src/main/resources/documentTypes.json
-[source,json]
-----
-[{
-    "_name": "starter_explorer_collector_document_type_a",
-    "addFields": false,
-    "properties": [{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": true,
-        "max": 0,
-        "min": 0,
-        "name": "text",
-        "nGram": true,
-        "path": false,
-        "valueType": "string"
-    },{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": true,
-        "max": 0,
-        "min": 0,
-        "name": "title",
-        "nGram": true,
-        "path": false,
-        "valueType": "string"
-    },{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": false,
-        "max": 0,
-        "min": 1,
-        "name": "url",
-        "nGram": false,
-        "path": false,
-        "valueType": "string"
-    }]
-},{
-    "_name": "starter_explorer_collector_document_type_b",
-    "addFields": false,
-    "properties": [{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": true,
-        "max": 0,
-        "min": 0,
-        "name": "propertyName",
-        "nGram": true,
-        "path": false,
-        "valueType": "string"
-    }]
-}]
-----
-
-./src/main/resources/tasks/collect/collect.ts
-[source,typescript]
-----
-collector.persistDocument(documentToPersist, {
-    documentTypeName: 'starter_explorer_collector_document_type_a'
-});
-----
-
-=== Task(s)
-
-An example is provided in the starter.
-
-TIP: A more advanced "example" can be found {githubWebcrawl}[here].
-
-It uses the normal {enonicTasks}[task framework], but has some useful extensions.
-
-The task receives the following properties, when called from the Explorer Admin GUI Application:
-
-* collectionId
-* collectorId
-* configJson
-* language
-
-The task descriptor xml must declare these properties:
-
-./src/main/resources/tasks/collect/collect.xml
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<task>
-	<description>Collect</description>
-	<form>
-		<input name="collectionId" type="TextLine">
-			<label>Collection ID</label>
-			<occurrences minimum="0" maximum="1"/>
-		</input>
-		<input name="collectorId" type="TextLine">
-			<label>Collector ID</label>
-			<occurrences minimum="1" maximum="1"/>
-		</input>
-		<input name="configJson" type="TextLine">
-			<label>Config JSON</label>
-			<occurrences minimum="1" maximum="1"/>
-		</input>
-		<input name="language" type="TextLine">
-			<label>Language</label>
-			<occurrences minimum="0" maximum="1"/>
-		</input>
-	</form>
-</task>
-----
+== Trying it out
 
-The task controller typescript file can then pass on these properties via the Collector class constructor:
+=== Enonic XP Dashboard
 
-./src/main/resources/tasks/collect/collect.ts
-[source,typescript]
-----
-import {Collector} from '/lib/explorer';
+Open a web broswer and visit the Enonic XP Dashboard at http://localhost:8080
 
-export function run({
-    collectionId,
-    collectorId,
-    configJson,
-    language
-}) {
-    const collector = new Collector<CollectorConfig>({
-        collectionId, collectorId, configJson, language
-    });
-}
-----
+Either btn:[LOG IN AS ADMIN] or btn:[CREATE AN ADMIN USER] and log in with that.
 
-==== The Collector Class
+=== Install Explorer
 
-The Collector class provides useful methods in order to:
+In order to test the collector you need to install the Explorer application.
 
-* Provide progress information to the Explorer Admin GUI App.
-* Persist documents.
-* Provide state information to build an Explorer Journal.
-* Make it possible to get whether Explorer Admin wants the collector to stop "midstream" (before it's actually finished).
+Open the Applications app via the topright XP menu, or via http://localhost:8080/admin/tool/com.enonic.xp.app.applications/main
 
-===== Properties
+Click the btn:[Install] button.
 
-====== config
+Find Explorer in the list and click the btn:[Install] button.
 
-Any configuration passed in via configJson is available as a javascript object via the config property.
+=== Open Explorer
 
-===== Methods
+Open the Explorer app via the topright XP menu or via http://localhost:8080/admin/tool/com.enonic.app.explorer/explorer
 
-====== constructor()
+=== Document type
 
-This method:
+Click the topleft hamburger menu and select btn:[Document types].
 
-* Throws if any of the parameters are missing or invalid.
-* Gets information about the Collection.
-* Parses the configJson and provides the result via the config property.
+Study the `document types`.
 
-====== start()
+Find the one named "starter_explorer_collector_document_type" and click the btn:[Edit] button.
 
-This method:
+Since this `document type` comes from a collector app, it is markes as managed and shouldn't be edited.
 
-* Stores a startTime timestamp used in duration calculations.
-* Reports an initial progress via lib-task.
-* Creates a new collection repo (if needed).
-* Persists information that the collector is running (so it can't be run twice in parallel, but can be stopped).
-* Sets up a journal to write state information to.
+As long as you don't make any changes and click the btn:[Save] button, you can safely click btn:[Yes] to edit the managed `document type`.
 
-====== queryDocuments()
+When editing the `document type`, you can now see details, edit or delete the `field(s)` contained in the `document type`.
 
-This method makes is possible to query the exisiting documents in the collection.
-Useful to find the document id to modify an existing document, rather than creating a new one.
+Whenever a new verion of the collector app is deployed, the `document type` will be updated to the new version.
 
-====== persistDocument()
+So the best place to change the `document type` is in the collector app itself.
 
-This method will create or modify a document, based on its parameters.
-If can also extend a documentType and validate against it.
+See <<Development>>
 
-====== deleteDocument()
+=== Collection
 
-This method makes it possible to delete one or more documents from the collection.
+Click the topleft hamburger menu and select btn:[Collections].
 
-====== getDocumentNode()
+Click the green bottom-right Create collection btn:[+] button.
 
-This method makes it possible to get one ore more documents from the collection.
-
-====== shouldStop()
-
-This method checks whether the STOP button has be clicked in the Explorer Admin GUI.
-
-Useful to finish gracefully, for instance by breaking loops.
-
-====== addSuccess()
-
-Adds a success to the journal.
-
-====== addInformation()
-
-Adds useful information to the journal.
-
-====== addWarning()
-
-Adds a warning to the journal.
-
-====== addError()
-
-Adds an error to the journal.
-
-====== stop()
-
-This method:
-
-* Persists the journal to the journal repo.
-* Sends emails if notifications are configured on the Explorer Admin GUI.
-* Persists information that the collector has failed or finished (so it can be started again).
-
-
-=== React form component(s)
-
-In order for your collector's configuration user interface to work in Explorer you must provide a React component.
-Any react component type should be supported, but all examples are functional (since that is the current status quo of react).
-
-The component receives four props from Explorer:
-
-. collectorConfig - Config state object.
-. setCollectorConfig - A function to modify the config state object.
-. setCollectorConfigErrorCount - A function to set how many validation errors the form has.
-. ref - A reference which makes it possible for the parent (Explorer Admin) to call functions inside this child component.
-
-==== collectorConfig
-
-This is a standard React.useState object. You can write any nested configuration properties you need to it (using the setCollectorConfig function). When the form is successfully submitted, the state object is persisted. Which means the next time the form is opened, the previous state is available.
-
-==== setCollectorConfig
-
-This is a standard setState function returned by React.useState. Use it to change the state of the collectorConfig object.
-
-==== setCollectorConfigErrorCount
-
-This is a standard setState function returned by React.useState. Use it to allow or prevent form submission. 0 errors are required to allow form submission.
-
-==== ref
-
-The react component can pass two named function references to it's parent component (Explorer Admin).
-
-===== afterReset
-
-In Explorer Admin there is a [Reset] form button. If you need any code to run in your component when this button is clicked pass a function named "afterReset" to the parent via React.useImperativeHandle:
-
-[source,typescript]
-----
-React.useImperativeHandle(ref, () => ({
-    afterReset
-}));
-----
-
-===== validate
-
-Each time the form state changes, the form is validated. If you need any code to run in your component during validation then pass a function named "validate" to the parent via React.useImperativeHandle:
-
-[source,typescript]
-----
-React.useImperativeHandle(ref, () => ({
-    validate
-}));
-----
