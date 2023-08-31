@@ -34,7 +34,9 @@ To see all available options, simply run `enonic`.
 
 TIP: To upgrade, use `enonic latest`. If there are new versions you will see instructions on how to upgrade.
 
-=== Create a Sandbox
+=== Sandbox
+
+==== Create
 
 A sandbox is a local developer instance of our platform - Enonic XP. Create a sandbox by running this command in your terminal:
 
@@ -42,7 +44,7 @@ A sandbox is a local developer instance of our platform - Enonic XP. Create a sa
 
 Give it a name, i.e. `intro`, and select the most recent version of Enonic XP from the list that appears.
 
-=== Start the Sandbox
+==== Start
 
 Start the sandbox with this command:
 
@@ -52,45 +54,15 @@ Select the `intro` sandbox from the list, and it will boot up in development mod
 
 TIP: Dev mode will automatically load changes in your code when developing.
 
-=== Create project
+=== Project
+
+==== Create
 
 To set up a project locally, run the following command and complete the steps:
 
   enonic project create -r myproject
 
-==== Project structure
-
-The previous step created the folder `myproject`, you should now have an app structure, looking something like this:
-
-.Selected files from the app code:
-[source,files]
-----
-src/
- main/
-  resources/
-   assets/
-     js/
-      react/
-       Collector.tsx <1>
-       useCollectorState.ts <2>
-   tasks/
-    collect/
-     collect.ts
-     collect.xml
-   collectors.json <3>
-   documentTypes.json <4>
-gradle.properties <5>
-webpack.config.babel.js <6>
-----
-
-<1> React component with the form elements
-<2> State code for the React component
-<3> Configuration for one or more collectors present in this application.
-<4> Configuration for one or more document-types present in this application.
-<5> App settings and name
-<6> Compilation settings
-
-=== Selecting the project sandbox
+==== Selecting sandbox
 
 From the project folder created (i.e. `myproject/`), run this command:
 
@@ -98,7 +70,7 @@ From the project folder created (i.e. `myproject/`), run this command:
 
 This command produces a .enonic file, which tells the enonic command which sandbox to use.
 
-=== Building the application
+==== Build
 
 From the project folder created (i.e. `myproject/`), run this command:
 
@@ -106,7 +78,7 @@ From the project folder created (i.e. `myproject/`), run this command:
 
 This command produces a .jar file in the folder `build/libs/` i.e. `build/libs/myproject.jar`
 
-=== Deploying the application to the sandbox
+==== Deploy
 
 From the project folder created (i.e. `myproject/`), run this command:
 
@@ -122,7 +94,9 @@ Open a web broswer and visit the Enonic XP Dashboard at http://localhost:8080
 
 Either btn:[LOG IN AS ADMIN] or btn:[CREATE AN ADMIN USER] and log in with that.
 
-=== Install Explorer
+=== Explorer
+
+==== Install
 
 In order to test the collector you need to install the Explorer application.
 
@@ -132,7 +106,7 @@ Click the btn:[Install] button.
 
 Find Explorer in the list and click the btn:[Install] button.
 
-=== Open Explorer
+==== Open
 
 Open the Explorer app via the topright XP menu or via http://localhost:8080/admin/tool/com.enonic.app.explorer/explorer
 
