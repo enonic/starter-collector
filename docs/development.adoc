@@ -1,12 +1,14 @@
 = Development
 :toc: right
 :toclevels: 4
+:enonicTasks: https://developer.enonic.com/docs/xp/stable/framework/tasks
+:githubWebcrawl: https://github.com/enonic/app-explorer/blob/master/src/main/resources/tasks/webcrawl/webcrawl.ts
 
 == Project structure
 
-The previous step created the folder `myproject`, you should now have an app structure, looking something like this:
+In the project folder you will find a file structure similar to this:
 
-.Selected files from the app code:
+.Some selected files from the collector app code:
 [source,files]
 ----
 src/
@@ -27,14 +29,14 @@ gradle.properties <5>
 webpack.config.babel.js <6>
 ----
 
-<1> React component with the form elements
-<2> State code for the React component
+<1> React component with the form elements.
+<2> State code for the React component.
 <3> Configuration for one or more collectors present in this application.
 <4> Configuration for one or more document-types present in this application.
-<5> App settings and name
-<6> Compilation settings
+<5> App settings and name.
+<6> Compilation settings.
 
-== Including the Explorer Library
+== build.gradle
 
 This should already be set up in the starter.
 
@@ -46,129 +48,84 @@ dependencies {
 }
 ----
 
-== Configure collectors.json
+== collectors.json
 
-You can include multiple collectors in a single enonic xp application.
-If you only include one, the collectors.json file should still contain an array with a single object entry.
+TIP: You can include multiple collectors in a single enonic xp application.
 
-Each collector needs to have it's own unique library name so React can access it on the window object.
+NOTE: If you only include one, the collectors.json file should still contain an array with a single object entry.
 
-The library name must match up between webpack.config.babel.js and src/main/resources/collectors.json
+CAUTION: Since all collectors are loaded into the same "global" scope in the browser, it's important that each collector has an unique library name. Not only inside a single collector app, but across all installed collector apps.
+
+.src/main/resources/collectors.json
+[,json]
+----
+include::../src/main/resources/collectors.json[]
+----
+
+NOTE: The library name must match up between webpack.config.babel.js and src/main/resources/collectors.json
 
 .webpack.config.babel.js
 [source,java]
 ----
 const config = {
     entry: {
-        'MyCollectorNameA': './CollectorA.jsx',
-        'MyCollectorNameB': './CollectorB.jsx',
+        'Collector': './Collector.tsx', <1>
     },
     output: {
         filename: '[name].esm.js',
-        library: 'Lib[name]',
+        library: 'Lib[name]', <2>
         libraryTarget: 'var',
     }
 }
 ----
+<1> The entry object keys will become part of the library name.
+<2> Since the entry name is "Collector", the library name will be "LibCollector".
 
-./src/main/resources/collectors.json
-[source,json]
+== documentTypes.json
+
+TIP: You can include multiple document-types in a single enonic xp application.
+
+NOTE: If you only include one, the documentTypes.json file should still contain an array with a single object entry.
+
+CAUTION: Each document-type must have a unique _name property. Not only inside a single collector app, but across all installed collector apps.
+
+[,json]
 ----
-[{
-    "componentPath": "window.LibMyCollectorNameA.Collector",
-    "configAssetPath": "react/MyCollectorNameA.esm.js",
-    "displayName": "My collector A",
-    "taskName": "collectA"
-},{
-    "componentPath": "window.LibMyCollectorNameB.Collector",
-    "configAssetPath": "react/MyCollectorNameB.esm.js",
-    "displayName": "My collector B",
-    "taskName": "collectB"
-}]
+include::../src/main/resources/documentTypes.json[]
 ----
 
-== Configure documentTypes.json
-
-You can include multiple document-types in a single enonic xp application.
-If you only include one, the documentTypes.json file should still contain an array with a single object entry.
-
-Each document-type must have a unique _name property.
-
-Those document-type names can then be used when persisting documents in you collector task code.
-
-./src/main/resources/documentTypes.json
-[source,json]
-----
-[{
-    "_name": "starter_explorer_collector_document_type_a",
-    "addFields": false,
-    "properties": [{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": true,
-        "max": 0,
-        "min": 0,
-        "name": "text",
-        "nGram": true,
-        "path": false,
-        "valueType": "string"
-    },{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": true,
-        "max": 0,
-        "min": 0,
-        "name": "title",
-        "nGram": true,
-        "path": false,
-        "valueType": "string"
-    },{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": false,
-        "max": 0,
-        "min": 1,
-        "name": "url",
-        "nGram": false,
-        "path": false,
-        "valueType": "string"
-    }]
-},{
-    "_name": "starter_explorer_collector_document_type_b",
-    "addFields": false,
-    "properties": [{
-        "active": true,
-        "enabled": true,
-        "fulltext": true,
-        "includeInAllText": true,
-        "max": 0,
-        "min": 0,
-        "name": "propertyName",
-        "nGram": true,
-        "path": false,
-        "valueType": "string"
-    }]
-}]
-----
+TIP: The document-type name can then be used when persisting documents in your collector task code:
 
 ./src/main/resources/tasks/collect/collect.ts
 [source,typescript]
 ----
 collector.persistDocument(documentToPersist, {
-    documentTypeName: 'starter_explorer_collector_document_type_a'
+    documentTypeName: 'starter_explorer_collector_document_type'
 });
 ----
 
-== Task(s)
+== React form
+
+In order to understand the example provided in the starter I suggest consulting the <<api/react, Collector React Form>> documentation while reading the code.
+
+=== Collector.tsx
+
+./src/main/resources/assets/js/react/Collector.tsx
+[,typescript]
+----
+include::../src/main/resources/assets/js/react/Collector.tsx[]
+----
+
+
+== Task
 
 An example is provided in the starter.
 
 TIP: A more advanced "example" can be found {githubWebcrawl}[here].
 
 It uses the normal {enonicTasks}[task framework], but has some useful extensions.
+
+=== collect.xml
 
 The task receives the following properties, when called from the Explorer Admin GUI Application:
 
@@ -180,31 +137,12 @@ The task receives the following properties, when called from the Explorer Admin 
 The task descriptor xml must declare these properties:
 
 ./src/main/resources/tasks/collect/collect.xml
-[source,xml]
+[,xml]
 ----
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<task>
-	<description>Collect</description>
-	<form>
-		<input name="collectionId" type="TextLine">
-			<label>Collection ID</label>
-			<occurrences minimum="0" maximum="1"/>
-		</input>
-		<input name="collectorId" type="TextLine">
-			<label>Collector ID</label>
-			<occurrences minimum="1" maximum="1"/>
-		</input>
-		<input name="configJson" type="TextLine">
-			<label>Config JSON</label>
-			<occurrences minimum="1" maximum="1"/>
-		</input>
-		<input name="language" type="TextLine">
-			<label>Language</label>
-			<occurrences minimum="0" maximum="1"/>
-		</input>
-	</form>
-</task>
+include::../src/main/resources/tasks/collect/collect.xml[]
 ----
+
+=== collect.ts
 
 The task controller typescript file can then pass on these properties via the Collector class constructor:
 
@@ -225,52 +163,10 @@ export function run({
 }
 ----
 
-== React form component(s)
+In order to understand the example provided in the starter I suggest consulting the <<api/task, Collector Task API>> documentation while reading the code:
 
-In order for your collector's configuration user interface to work in Explorer you must provide a React component.
-Any react component type should be supported, but all examples are functional (since that is the current status quo of react).
-
-The component receives four props from Explorer:
-
-. collectorConfig - Config state object.
-. setCollectorConfig - A function to modify the config state object.
-. setCollectorConfigErrorCount - A function to set how many validation errors the form has.
-. ref - A reference which makes it possible for the parent (Explorer Admin) to call functions inside this child component.
-
-=== collectorConfig
-
-This is a standard React.useState object. You can write any nested configuration properties you need to it (using the setCollectorConfig function). When the form is successfully submitted, the state object is persisted. Which means the next time the form is opened, the previous state is available.
-
-=== setCollectorConfig
-
-This is a standard setState function returned by React.useState. Use it to change the state of the collectorConfig object.
-
-=== setCollectorConfigErrorCount
-
-This is a standard setState function returned by React.useState. Use it to allow or prevent form submission. 0 errors are required to allow form submission.
-
-=== ref
-
-The react component can pass two named function references to it's parent component (Explorer Admin).
-
-==== afterReset
-
-In Explorer Admin there is a [Reset] form button. If you need any code to run in your component when this button is clicked pass a function named "afterReset" to the parent via React.useImperativeHandle:
-
-[source,typescript]
+./src/main/resources/tasks/collect/collect.ts
+[,typescript]
 ----
-React.useImperativeHandle(ref, () => ({
-    afterReset
-}));
-----
-
-==== validate
-
-Each time the form state changes, the form is validated. If you need any code to run in your component during validation then pass a function named "validate" to the parent via React.useImperativeHandle:
-
-[source,typescript]
-----
-React.useImperativeHandle(ref, () => ({
-    validate
-}));
+include::../src/main/resources/tasks/collect/collect.ts[]
 ----
