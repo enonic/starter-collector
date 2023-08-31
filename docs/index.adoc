@@ -1,69 +1,152 @@
-= Building a custom collector
+= Build a custom Collector for Explorer
 :toc: right
+:toclevels: 6
+:enonicStart: https://developer.enonic.com/start
+:enonicTasks: https://developer.enonic.com/docs/xp/stable/framework/tasks
+:githubWebcrawl: https://github.com/enonic/app-explorer/blob/master/src/main/resources/tasks/webcrawl/webcrawl.ts
+
+This guide takes you through the steps of building a custom Collector for Explorer.
 
 == Introduction
 
-NOTE: This documentation assumes you are already familiar with Enonic application developmentm. If not? Start with https://developer.enonic.com/start[the fundamentals].
+Collectors are implemented as standard XP applications. They essentially consist of two main components:
 
+Form:: A React based user interface that enable search administrators to instruct the collector in it’s specific activities.
 
-Collectors are implemented as standard XP applications. They essentially consist of two main ingredients:
-
-A task:: Code that performs the actual retrieval of data for indexing.
-
-A form:: A React based user interface that enable search administrators to configure the collector for a specific collection.
+Task:: Code that performs the actual retrieval of content for indexing.
 
 This section will guide you through the basic steps of building your own custom collector.
 
-== Step 1: Create application
+=== Install CLI
 
-Use Enonic CLI to create an application based on the vanilla starter:
+The Enonic Command Line Interface is an essential tool for developers working with Enonic.
 
-	enonic project create -r starter-collector
+If you have `npm` on your device, run this command:
 
-The starter ships with the essential setup required for any collector:
+  npm install -g @enonic/cli
 
-=== Dependencies
+If not, here are some {enonicStart}[alternative ways to install Enonic CLI^]
+
+To verify that the CLI has been installed, run `enonic -v`. This should output the version of your installed CLI.
+
+To see all available options, simply run `enonic`.
+
+TIP: To upgrade, use `enonic latest`. If there are new versions you will see instructions on how to upgrade.
+
+=== Create a Sandbox
+
+A sandbox is a local developer instance of our platform - Enonic XP. Create a sandbox by running this command in your terminal:
+
+  enonic sandbox create
+
+Give it a name, i.e. `intro`, and select the most recent version of Enonic XP from the list that appears.
+
+Start the sandbox with this command:
+
+  enonic sandbox start --dev
+
+Select the `intro` sandbox from the list, and it will boot up in development mode.
+
+TIP: Dev mode will automatically load changes in your code when developing.
+
+=== Create project
+
+To set up a project locally, run the following command and complete the steps:
+
+  enonic project create -r myproject
+
+==== Project structure
+
+The previous step created the folder `myproject`, you should now have an app structure, looking something like this:
+
+.Selected files from the app code:
+[source,files]
+----
+src/
+ main/
+  resources/
+   assets/
+     js/
+      react/
+       Collector.tsx <1>
+       useCollectorState.ts <2>
+   tasks/
+    collect/
+     collect.ts
+     collect.xml
+   collectors.json <3>
+   documentTypes.json <4>
+gradle.properties <5>
+webpack.config.babel.js <6>
+----
+
+<1> React component with the form elements
+<2> State code for the React component
+<3> Configuration for one or more collectors present in this application.
+<4> Configuration for one or more document-types present in this application.
+<5> App settings and name
+<6> Compilation settings
+
+=== Selecting the project sandbox
+
+From the project folder created (i.e. `myproject/`), run this command:
+
+  enonic project sandbox
+
+This command produces a .enonic file, which tells the enonic command which sandbox to use.
+
+=== Building the application
+
+From the project folder created (i.e. `myproject/`), run this command:
+
+  enonic project build
+
+This command produces a .jar file in the folder `build/libs/` i.e. `build/libs/myproject.jar`
+
+=== Deploying the application to the sandbox
+
+From the project folder created (i.e. `myproject/`), run this command:
+
+  enonic project deploy
+
+This command copies the .jar file from the `build/libs/` folder into the sandbox home deploy folder.
+
+== Development
+
+=== Including the Explorer Library
+
+This should already be set up in the starter.
 
 .build.gradle
-[source,java]
+[source,gradle]
 ----
 dependencies {
-	include 'com.enonic.lib:lib-explorer:3.20.1'
-
-	// Needed by lib-explorer (or lib-util)?
-	include "com.enonic.xp:lib-cluster:${xpVersion}"
-	include "com.enonic.xp:lib-context:${xpVersion}"
-	include "com.enonic.xp:lib-event:${xpVersion}"
-	include "com.enonic.xp:lib-i18n:${xpVersion}"
-	include "com.enonic.xp:lib-mail:${xpVersion}"
-	include "com.enonic.xp:lib-node:${xpVersion}"
-	include "com.enonic.xp:lib-portal:${xpVersion}"
-	include "com.enonic.xp:lib-repo:${xpVersion}"
+    include 'com.enonic.lib:lib-explorer:4.0.0'
 }
 ----
 
-NOTE: Remember to use a version of the library that is equal to or newer than the version of Explorer you are using.
-
-=== Collectors.json
+=== Configure collectors.json
 
 You can include multiple collectors in a single enonic xp application.
 If you only include one, the collectors.json file should still contain an array with a single object entry.
 
-Each collector needs to have it's own unique library name so react can access it on the window object.
+Each collector needs to have it's own unique library name so React can access it on the window object.
+
+The library name must match up between webpack.config.babel.js and src/main/resources/collectors.json
 
 .webpack.config.babel.js
 [source,java]
 ----
 const config = {
-	entry: {
-		'MyCollectorNameA': './CollectorA.jsx',
-		'MyCollectorNameB': './CollectorB.jsx',
-	},
-	output: {
-		filename: '[name].esm.js',
-		library: 'Lib[name]',
-		libraryTarget: 'var',
-	}
+    entry: {
+        'MyCollectorNameA': './CollectorA.jsx',
+        'MyCollectorNameB': './CollectorB.jsx',
+    },
+    output: {
+        filename: '[name].esm.js',
+        library: 'Lib[name]',
+        libraryTarget: 'var',
+    }
 }
 ----
 
@@ -71,316 +154,120 @@ const config = {
 [source,json]
 ----
 [{
-	"componentPath": "window.LibMyCollectorNameA.Collector",
-	"configAssetPath": "react/MyCollectorNameA.esm.js",
-	"displayName": "My collector A",
-	"taskName": "collectA"
+    "componentPath": "window.LibMyCollectorNameA.Collector",
+    "configAssetPath": "react/MyCollectorNameA.esm.js",
+    "displayName": "My collector A",
+    "taskName": "collectA"
 },{
-	"componentPath": "window.LibMyCollectorNameB.Collector",
-	"configAssetPath": "react/MyCollectorNameB.esm.js",
-	"displayName": "My collector B",
-	"taskName": "collectB"
+    "componentPath": "window.LibMyCollectorNameB.Collector",
+    "configAssetPath": "react/MyCollectorNameB.esm.js",
+    "displayName": "My collector B",
+    "taskName": "collectB"
 }]
 ----
 
+=== Configure documentTypes.json
 
-=== Register (DEPRECATED) / Unregister
+You can include multiple document-types in a single enonic xp application.
+If you only include one, the documentTypes.json file should still contain an array with a single object entry.
 
-The register function has now been deprecated, but has been improved to detect installed version app-explorer.
-So if you want your collector to work on app-explorer versions<1.5.0 just keep the register call.
+Each document-type must have a unique _name property.
 
-In order for Explorer to detect available collectors, each collector needs to register:
+Those document-type names can then be used when persisting documents in you collector task code.
 
-.main.es
-[source,java]
+./src/main/resources/documentTypes.json
+[source,json]
 ----
-import {register} from '/lib/explorer';
+[{
+    "_name": "starter_explorer_collector_document_type_a",
+    "addFields": false,
+    "properties": [{
+        "active": true,
+        "enabled": true,
+        "fulltext": true,
+        "includeInAllText": true,
+        "max": 0,
+        "min": 0,
+        "name": "text",
+        "nGram": true,
+        "path": false,
+        "valueType": "string"
+    },{
+        "active": true,
+        "enabled": true,
+        "fulltext": true,
+        "includeInAllText": true,
+        "max": 0,
+        "min": 0,
+        "name": "title",
+        "nGram": true,
+        "path": false,
+        "valueType": "string"
+    },{
+        "active": true,
+        "enabled": true,
+        "fulltext": true,
+        "includeInAllText": false,
+        "max": 0,
+        "min": 1,
+        "name": "url",
+        "nGram": false,
+        "path": false,
+        "valueType": "string"
+    }]
+},{
+    "_name": "starter_explorer_collector_document_type_b",
+    "addFields": false,
+    "properties": [{
+        "active": true,
+        "enabled": true,
+        "fulltext": true,
+        "includeInAllText": true,
+        "max": 0,
+        "min": 0,
+        "name": "propertyName",
+        "nGram": true,
+        "path": false,
+        "valueType": "string"
+    }]
+}]
+----
 
-register({
-	appName: app.name,
-	collectTaskName: 'collect',
-	configAssetPath: 'react/Collector.esm.js',
-	displayName: 'My collector'
+./src/main/resources/tasks/collect/collect.ts
+[source,typescript]
+----
+collector.persistDocument(documentToPersist, {
+    documentTypeName: 'starter_explorer_collector_document_type_a'
 });
 ----
 
-=== Unregister (NOT DEPRECATED YET)
+=== Task(s)
 
-Unregister is not deprecated yet in order to remove old registrations.
+An example is provided in the starter.
 
-In order for Explorer to detect available collectors, each collector needs to unregister itself:
+TIP: A more advanced "example" can be found {githubWebcrawl}[here].
 
-.main.es
-[source,java]
-----
-import {unregister} from '/lib/explorer';
+It uses the normal {enonicTasks}[task framework], but has some useful extensions.
 
-__.disposer(() => {
-	unregister({
-		appName: app.name,
-		collectTaskName: 'collect'
-	});
-});
-----
+The task receives the following properties, when called from the Explorer Admin GUI Application:
 
+* collectionId
+* collectorId
+* configJson
+* language
 
-== Step 2: React form
+The task descriptor xml must declare these properties:
 
-The starter also provides the essential build system for the React-based user interface.
-
-Some important ingredients that enable this are:
-
-- node-gradle-plugin
-- webpack
-- babel
-- node_modules
-  * @enonic/semantic-ui-react-form
-  * @enonic/webpack-esm-assets
-  * @enonic/webpack-server-side-js
-	* get-value
-	* semantic-ui-react
-	* set-value
-
-=== React component
-
-In order for your collector's configuration user interface to work in Explorer you must provide a React component.
-Any react component type should be supported, but all examples are functional (since that is the current status quo of react).
-
-The component receives five props from Explorer:
-. context - Read only object which are change via dispatching actions to its state reducer.
-. dispatch - Function to send actions to the state reducer.
-. explorer - static information like contentTypes, fields and sites
-. isFirstRun - Use this to only do things once during initialization of your form. (And not on every render)
-. path - Where your form is located in the context object.
-
-==== context object
-
-This object contains a lot of data used to maintain state by semantic-ui-react-form.
-In most cases knowing about its values property should be enough.
-
-==== dispatch function
-
-You can import various reducer actions from semantic-ui-react-form and send the to the reducer using the dispatch function.
-
-==== explorer object
-
-This object contains information from Explorer about the collector context. The information can be used to make dropdowns in your collectors configuration.
-
-==== isFirstRun
-
-This is a React ref object whose .current property is initialized to true. If you have any code that should only run once on initialization of you collector component, you can use this object to achieve this. Here is some example code:
-
-[source,javascript]
-----
-import getIn from 'get-value';
-
-export const Collector = ({
-	context,
-	isFirstRun,
-	path
-}) => {
-	let initialValues = getIn(context.values, path);
-	if (isFirstRun.current) {
-		isFirstRun.current = false; // Make sure the code block never runs again.
-		if (!initialValues) {
-			initialValues = {
-				aProperty: 'defaultValueForProperty',
-			}
-		}
-	} // if isFirstRun
-} // Collector
-----
-
-You can read more about React ref objects here: https://reactjs.org/docs/hooks-reference.html#useref
-
-==== path
-
-Use to this to fetch your form values and also when dispatching actions to the state reducer.
-
-==== Example
-
-.src/resources/assets/js/react/Collector.jsx
-[source,jsx]
-----
-import getIn from 'get-value';
-import setIn from 'set-value';
-import {Button, Form, Header, Icon, Table} from 'semantic-ui-react';
-import {
-	setError,
-	setSchema,
-	setValue,
-	setVisited,
-	DeleteItemButton,
-	Form as EnonicForm,
-	Input,
-	InsertButton,
-	List,
-	MoveDownButton,
-	MoveUpButton,
-	SetValueButton
-} from 'semantic-ui-react-form';
-
-function required(value) {
-	return value ? undefined : 'Required!';
-}
-
-const SCHEMA = {
-	uri: (v) => required(v)
-};
-
-export const Collector = (props) => {
-	const {
-		context,
-		dispatch,
-		explorer,
-		isFirstRun,
-		path
-	} = props;
-	let initialValues = getIn(context.values, path);
-	if (isFirstRun.current) {
-		//console.debug('isFirstRun');
-		isFirstRun.current = false;
-		dispatch(setSchema({path, schema: SCHEMA}));
-		if (!initialValues) {
-			initialValues = {
-				uri: ''
-			};
-			dispatch(setValue({path, value: initialValues}));
-		}
-		return <EnonicForm
-			initialValues={initialValues}
-			onChange={(values) => {
-				//console.debug('Collector onChange values', values);
-				dispatch(setValue({path, value: values}));
-			}}
-			schema={SCHEMA}
-		>
-			<Form as='div'>
-				<Form.Field>
-					<Input
-						fluid
-						label='Uri'
-						path='uri'
-					/>
-				</Form.Field>
-			</Form>
-		</EnonicForm>;
-};
-----
-
-== Step 3: Collector task
-
-The actual code to retrieve and return content for indexing is implemented using https://developer.enonic.com/docs/xp/stable/framework/tasks[named tasks].
-
-
-The most important parts of a collector are:
-
-=== Progress reporting
-
-In the explorer app there is a page to display Collector status.
-In order for this page to show useful updated information.
-The collector tasks needs to send progress information.
-When your collector task runs
-[source,javascript]
-----
-collector.start();
-----
-
-A collector.taskProgressObj will be created automatically. Looking something like this:
-
-[source,javascript]
-----
-collector.taskProgressObj = {
-	current: 0,
-	info: {
-		name: 'Example',
-		message: 'Initializing...',
-		startTime: '2020...'
-	},
-	total: 1 // So it appears there is something to do.
-}
-----
-
-A collector task may have a set or changing number of operations to perform.
-You should keep the progress updated something like this:
-
-[source,javascript]
-----
-collector.start();
-collector.taskProgressObj.total = initialNumberOfOperations;
-while(somethingToDo) {
-	collector.taskProgressObj.info.uri = currentUri;
-	collector.taskProgressObj.info.message = 'Some useful information';
-	collector.progress(); // This will update task progress. So it can be seen.
-
-	// ... do stuff ...
-
-	collector.taskProgressObj.total += foundSomeMoreOperationsToPerform;
-
-	collector.taskProgressObj.current += 1;
-}
-collector.stop();
-----
-
-
-Finally when you collector task calls
-[source,javascript]
-----
-collector.stop();
-----
-
-It will set current = total and a nice info.message = `Finished with ${x} errors.`;
-
-=== Journal
-
-When a collector task is finished. A journal will be persisted.
-The journal contains information about things that went well, and possible errors.
-Write to the journal by using *addSuccess* or *addError* like this:
-
-[source,javascript]
-----
-try {
-	// ... do some stuff that could fail ...
-	collector.addSuccess({uri: currentUri});
-} catch (e) {
-	collector.addError({uri: currentUri, message: e.message});
-}
-----
-
-=== CRUD
-
-When you have collected some information you want to make available for later search you have to persist it.
-This can be done by calling *persistDocument* like this:
-
-[source,javascript]
-----
-collector.persistDocument({
-	aField: 'aTag', // Optional, perhaps used in aggregation and filtering.
-	anotherField: 'anotherTag', // Optional, perhaps used in aggregation and filtering.
-	text, // Required!
-	title, // Required!
-	uri, // Required!
-	whatever: 'perhapsAnImageUrl' // Optional, perhaps used when displaying search results.
-});
-----
-
-The explorer library Collection class currently does not provide any api for reading and deleting documents.
-You may connect to the collection repositories via standard Enonic API's or via other currently undocumented Explorer library functions.
-
-=== Example code
-
-The complexity of a collector may vary, but as to provide a basic idea, the starter includes a simple example:
-
-.src/resources/tasks/collect.xml
+./src/main/resources/tasks/collect/collect.xml
 [source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <task>
 	<description>Collect</description>
 	<form>
-		<input name="name" type="TextLine">
-			<label>Name</label>
-			<occurrences minimum="1" maximum="1"/>
+		<input name="collectionId" type="TextLine">
+			<label>Collection ID</label>
+			<occurrences minimum="0" maximum="1"/>
 		</input>
 		<input name="collectorId" type="TextLine">
 			<label>Collector ID</label>
@@ -398,138 +285,155 @@ The complexity of a collector may vary, but as to provide a basic idea, the star
 </task>
 ----
 
-.src/resources/tasks/collect.es
-[source,javascript]
+The task controller typescript file can then pass on these properties via the Collector class constructor:
+
+./src/main/resources/tasks/collect/collect.ts
+[source,typescript]
 ----
-import '@enonic/nashorn-polyfills'; <--1-->
-import {Collector} from '/lib/explorer/collector'; <--2-->
+import {Collector} from '/lib/explorer';
 
-export function run({name, collectorId, configJson, language}) { <--3-->
-	const collector = new Collector({name, collectorId, configJson, language}); <--4-->
-
-	if (!collector.config.uri) { <--5-->
-		throw new Error('Config is missing required parameter uri!');
-	}
-
-	collector.start(); <--6-->
-
-	const {
-		uri,
-		object: {
-			someNestedProperty
-		}
-	} = collector.config; <--7-->
-
-	while(somethingToDo) {
-		if (collector.shouldStop()) { break; } <--8-->
-
-		try {
-			const {text, title} = doSomethingThatMayFail(); <--9-->
-
-			collector.persistDocument({
-				text,
-				title,
-				uri
-			}); <--10-->
-
-			collector.addSuccess({uri}); <--11-->
-
-		} catch (e) {
-
-			collector.addError({uri, message: e.message}); <--12-->
-
-		}
-	} // while somethingToDo
-
-	// Perhaps delete documents that are no longer found...
-
-	collector.stop(); <--13-->
-
-} // export function run
-----
-
-<1> Perhaps import <<_polyfills,polyfills>>.
-<2> Import the Collector class
-<3> The collect task gets passed four named parameters.
-<4> Construct a Collector instance.
-<5> Validate the configuration object.
-<6> Start the collector. Sets startTime and more.
-<7> Fetch configuration properties you need from the collector.config object.
-<8> Check if someone has clicked the STOP button.
-<9> This is where you collect the data you want to persist.
-<10> Persist the collected data.
-<11> Make a journal entry that collecting data from uri was a success.
-<12> Make a journal entry that an error prevented collecting data from uri.
-<13> Stop the collector. Sets endTime and more.
-
-=== Polyfills
-
-Depending upon what your Enonic XP serverside code contains, or potential node modules you import, you may have to polyfill some js functionality that the Javascript engine (Nashorn) doesn't support.
-
-.src/resources/lib/nashorn/index.js
-[source,javascript]
-----
-require './global';
-require './Array';
-require './Number';
-----
-
-.webpack.config.babel.js
-[source,java]
-----
-import path from 'path';
-const WEBPACK_CONFIG = {
-	resolve: {
-		alias: '@enonic/nashorn-polyfills': path.resolve(__dirname, 'src/main/resources/lib/nashorn/index.js')
-	}
-}
-export { WEBPACK_CONFIG as default };
-----
-
-==== Global
-.src/resources/lib/nashorn/global.js
-[source,javascript]
-----
-// https://stackoverflow.com/questions/9107240/1-evalthis-vs-evalthis-in-javascript
-const global = (1, eval)('this'); // eslint-disable-line no-eval
-global.global = global;
-global.globalThis = global;
-global.frames = global;
-global.self = global;
-global.window = global;
-module.exports = global;
-----
-
-==== Array.flat
-.src/resources/lib/nashorn/Array.js
-[source,javascript]
-----
-if (!Array.prototype.flat) {
-	Object.defineProperty(Array.prototype, 'flat', {
-		value: function(depth = 1) {
-			return this.reduce(function (flat, toFlatten) {
-				return flat.concat((Array.isArray(toFlatten) && (depth>1)) ? toFlatten.flat(depth-1) : toFlatten);
-			}, []);
-		}
-	});
+export function run({
+    collectionId,
+    collectorId,
+    configJson,
+    language
+}) {
+    const collector = new Collector<CollectorConfig>({
+        collectionId, collectorId, configJson, language
+    });
 }
 ----
 
-==== Number.isInteger
+==== The Collector Class
 
-.src/resources/lib/nashorn/Number.js
-[source,javascript]
+The Collector class provides useful methods in order to:
+
+* Provide progress information to the Explorer Admin GUI App.
+* Persist documents.
+* Provide state information to build an Explorer Journal.
+* Make it possible to get whether Explorer Admin wants the collector to stop "midstream" (before it's actually finished).
+
+===== Properties
+
+====== config
+
+Any configuration passed in via configJson is available as a javascript object via the config property.
+
+===== Methods
+
+====== constructor()
+
+This method:
+
+* Throws if any of the parameters are missing or invalid.
+* Gets information about the Collection.
+* Parses the configJson and provides the result via the config property.
+
+====== start()
+
+This method:
+
+* Stores a startTime timestamp used in duration calculations.
+* Reports an initial progress via lib-task.
+* Creates a new collection repo (if needed).
+* Persists information that the collector is running (so it can't be run twice in parallel, but can be stopped).
+* Sets up a journal to write state information to.
+
+====== queryDocuments()
+
+This method makes is possible to query the exisiting documents in the collection.
+Useful to find the document id to modify an existing document, rather than creating a new one.
+
+====== persistDocument()
+
+This method will create or modify a document, based on its parameters.
+If can also extend a documentType and validate against it.
+
+====== deleteDocument()
+
+This method makes it possible to delete one or more documents from the collection.
+
+====== getDocumentNode()
+
+This method makes it possible to get one ore more documents from the collection.
+
+====== shouldStop()
+
+This method checks whether the STOP button has be clicked in the Explorer Admin GUI.
+
+Useful to finish gracefully, for instance by breaking loops.
+
+====== addSuccess()
+
+Adds a success to the journal.
+
+====== addInformation()
+
+Adds useful information to the journal.
+
+====== addWarning()
+
+Adds a warning to the journal.
+
+====== addError()
+
+Adds an error to the journal.
+
+====== stop()
+
+This method:
+
+* Persists the journal to the journal repo.
+* Sends emails if notifications are configured on the Explorer Admin GUI.
+* Persists information that the collector has failed or finished (so it can be started again).
+
+
+=== React form component(s)
+
+In order for your collector's configuration user interface to work in Explorer you must provide a React component.
+Any react component type should be supported, but all examples are functional (since that is the current status quo of react).
+
+The component receives four props from Explorer:
+
+. collectorConfig - Config state object.
+. setCollectorConfig - A function to modify the config state object.
+. setCollectorConfigErrorCount - A function to set how many validation errors the form has.
+. ref - A reference which makes it possible for the parent (Explorer Admin) to call functions inside this child component.
+
+==== collectorConfig
+
+This is a standard React.useState object. You can write any nested configuration properties you need to it (using the setCollectorConfig function). When the form is successfully submitted, the state object is persisted. Which means the next time the form is opened, the previous state is available.
+
+==== setCollectorConfig
+
+This is a standard setState function returned by React.useState. Use it to change the state of the collectorConfig object.
+
+==== setCollectorConfigErrorCount
+
+This is a standard setState function returned by React.useState. Use it to allow or prevent form submission. 0 errors are required to allow form submission.
+
+==== ref
+
+The react component can pass two named function references to it's parent component (Explorer Admin).
+
+===== afterReset
+
+In Explorer Admin there is a [Reset] form button. If you need any code to run in your component when this button is clicked pass a function named "afterReset" to the parent via React.useImperativeHandle:
+
+[source,typescript]
 ----
-Number.isInteger = Number.isInteger || function(value) {
-	return typeof value === 'number' &&
-	isFinite(value) &&
-	Math.floor(value) === value;
-};
+React.useImperativeHandle(ref, () => ({
+    afterReset
+}));
 ----
 
-== Step 4: Install and test
+===== validate
 
-When you have built your collector application.
-Install the jar file on the Enonic XP server where you have Explorer installed.
-Then create a collection using your collector, and click collect to see what happens.
-It is a good idea to run locally first and keep an eye on the Enonic XP server log.
+Each time the form state changes, the form is validated. If you need any code to run in your component during validation then pass a function named "validate" to the parent via React.useImperativeHandle:
+
+[source,typescript]
+----
+React.useImperativeHandle(ref, () => ({
+    validate
+}));
+----
