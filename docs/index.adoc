@@ -3,8 +3,6 @@
 :toc: right
 :toclevels: 6
 :enonicStart: https://developer.enonic.com/start
-:enonicTasks: https://developer.enonic.com/docs/xp/stable/framework/tasks
-:githubWebcrawl: https://github.com/enonic/app-explorer/blob/master/src/main/resources/tasks/webcrawl/webcrawl.ts
 
 This guide takes you through the steps of building a custom Collector for Explorer.
 
@@ -215,3 +213,9 @@ If you aren't familiar with GraphQL, you might want to read up on it https://gra
 Try to change the searchString to "example" and click the btn:[Play] button.
 
 You should not see a search result with Example highlighted.
+
+== Development
+
+Now that you have familiarized yourself with the Explorer app, it's time to start developing your own collector.
+
+Continue to <<Development>>.

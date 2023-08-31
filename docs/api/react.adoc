@@ -1,0 +1,49 @@
+= React form component(s)
+
+In order for your collector's configuration user interface to work in Explorer you must provide a React component.
+Any react component type should be supported, but all examples are functional (since that is the current status quo of react).
+
+The component receives four props from Explorer:
+
+. collectorConfig - Config state object.
+. setCollectorConfig - A function to modify the config state object.
+. setCollectorConfigErrorCount - A function to set how many validation errors the form has.
+. ref - A reference which makes it possible for the parent (Explorer Admin) to call functions inside this child component.
+
+== collectorConfig
+
+This is a standard React.useState object. You can write any nested configuration properties you need to it (using the setCollectorConfig function). When the form is successfully submitted, the state object is persisted. Which means the next time the form is opened, the previous state is available.
+
+== setCollectorConfig
+
+This is a standard setState function returned by React.useState. Use it to change the state of the collectorConfig object.
+
+== setCollectorConfigErrorCount
+
+This is a standard setState function returned by React.useState. Use it to allow or prevent form submission. 0 errors are required to allow form submission.
+
+== ref
+
+The react component can pass two named function references to it's parent component (Explorer Admin).
+
+=== afterReset
+
+In Explorer Admin there is a [Reset] form button. If you need any code to run in your component when this button is clicked pass a function named "afterReset" to the parent via React.useImperativeHandle:
+
+[source,typescript]
+----
+React.useImperativeHandle(ref, () => ({
+    afterReset
+}));
+----
+
+=== validate
+
+Each time the form state changes, the form is validated. If you need any code to run in your component during validation then pass a function named "validate" to the parent via React.useImperativeHandle:
+
+[source,typescript]
+----
+React.useImperativeHandle(ref, () => ({
+    validate
+}));
+----

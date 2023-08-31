@@ -1,9 +1,9 @@
 import type {CollectorConfig} from '../../index.d'
 
 
-//@ts-ignore
+// @ts-ignore
 import {request as httpClientRequest} from '/lib/http-client';
-//import {toStr} from '@enonic/js-utils';
+// import {toStr} from '@enonic/js-utils';
 
 import {Collector} from '/lib/explorer';
 
@@ -26,12 +26,18 @@ export function run({
 	try {
 		const res = httpClientRequest({
 			url
-		}); //log.info(toStr({res}));
+		});
+		// log.info(toStr({res}));
+
 		if (res.status != 200) {
 			throw new Error(`Status: ${res.status}!`);
 		}
-		//const htmlStr = res.body; //log.info(toStr({htmlStr}));
-		const title = res.body.match(/<title>([^<]*?)<\/title>/i)[1]; //log.info(toStr({title}));
+
+		// const htmlStr = res.body;
+		// log.info(toStr({htmlStr}));
+
+		const title = res.body.match(/<title>([^<]*?)<\/title>/i)[1];
+		// log.info(toStr({title}));
 
 		const text = res.body
 			.match(/<body>([\s\S]*?)<\/body>/i)[1]
@@ -39,7 +45,7 @@ export function run({
 			.replace(/[\n\r]/g, ' ')
 			.replace(/\s{2,}/g, ' ')
 			.trim();
-		//log.info(toStr({text}));
+		// log.info(toStr({text}));
 
 		const documentToPersist :CollectorConfig & {_id ?:string} = {
 			title,
@@ -82,11 +88,7 @@ export function run({
 	//──────────────────────────────────────────────────────────────────────────
 	// 6. Delete old nodes
 	//──────────────────────────────────────────────────────────────────────────
-	/*deleteOldNodes({
-		collectionWriteConnection: collectionConnection,
-		journal,
-		seenUrisObj
-	});*/
+	// TODO: Not implemented yet...
 
 	collector.stop();
 } // function run
