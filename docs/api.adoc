@@ -1,0 +1,86 @@
+= Collector API
+:toc: right
+:toclevels: 4
+
+== The Collector Class
+
+The Collector class provides useful methods in order to:
+
+* Provide progress information to the Explorer Admin GUI App.
+* Persist documents.
+* Provide state information to build an Explorer Journal.
+* Make it possible to get whether Explorer Admin wants the collector to stop "midstream" (before it's actually finished).
+
+=== Properties
+
+==== config
+
+Any configuration passed in via configJson is available as a javascript object via the config property.
+
+=== Methods
+
+==== constructor()
+
+This method:
+
+* Throws if any of the parameters are missing or invalid.
+* Gets information about the Collection.
+* Parses the configJson and provides the result via the config property.
+
+==== start()
+
+This method:
+
+* Stores a startTime timestamp used in duration calculations.
+* Reports an initial progress via lib-task.
+* Creates a new collection repo (if needed).
+* Persists information that the collector is running (so it can't be run twice in parallel, but can be stopped).
+* Sets up a journal to write state information to.
+
+==== queryDocuments()
+
+This method makes is possible to query the exisiting documents in the collection.
+Useful to find the document id to modify an existing document, rather than creating a new one.
+
+==== persistDocument()
+
+This method will create or modify a document, based on its parameters.
+If can also extend a documentType and validate against it.
+
+==== deleteDocument()
+
+This method makes it possible to delete one or more documents from the collection.
+
+==== getDocumentNode()
+
+This method makes it possible to get one ore more documents from the collection.
+
+==== shouldStop()
+
+This method checks whether the STOP button has be clicked in the Explorer Admin GUI.
+
+Useful to finish gracefully, for instance by breaking loops.
+
+==== addSuccess()
+
+Adds a success to the journal.
+
+==== addInformation()
+
+Adds useful information to the journal.
+
+==== addWarning()
+
+Adds a warning to the journal.
+
+==== addError()
+
+Adds an error to the journal.
+
+==== stop()
+
+This method:
+
+* Persists the journal to the journal repo.
+* Sends emails if notifications are configured on the Explorer Admin GUI.
+* Persists information that the collector has failed or finished (so it can be started again).
