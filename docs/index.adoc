@@ -158,7 +158,86 @@ See <<Development>>
 
 === Collection
 
+==== Create
+
 Click the topleft hamburger menu and select btn:[Collections].
 
 Click the green bottom-right Create collection btn:[+] button.
 
+Fill in a name and select a Default language for the collection. For instance en-US.
+
+Select the `Starter` collector in the collector dropdown.
+
+It will list the managed `document type(s)` the collector contains.
+
+If will also show the React form from the collector app.
+
+Fill in an url in the url input. For instance https://example.com
+
+Finally click the btn:[Save] button.
+
+The collection should now be visible in the list of collections.
+
+==== Collect
+
+In the list of collections, click the btn:[green cloud download] button.
+
+This will start running the task from inside the collector app, using the url you filled in above.
+
+==== Status / Progress
+
+While the collector task is running it's possible to see the status and progress of the task.
+
+Click the topleft hamburger menu and under `Collections` select the btn:[Status] menu item.
+
+On the status page you can keep an eye on the collector while it's running.
+
+==== Journal
+
+When the collector task has finished, you can see the result in the journal.
+
+Click the topleft hamburger menu and under `Collections` select the btn:[Journal] menu item.
+
+If everything went well, you should see a new entry in the journal with 1 success and 0 errors.
+
+=== Documents
+
+Now that you have a collection with a document, you can search for it under the documents page.
+
+To limit the search to only documents from a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.
+
+Fill in a search term in the search input. For instance "example" and hit kbd:[Enter].
+
+You should now get a search result with the document and the word you searched for highlighted.
+
+If you search for a word that isn't in the document, the search result should be empty.
+
+=== Interface
+
+==== Create
+
+Now that you have a collection with a document, you can setup an interface to search for it using GraphQL.
+
+Click the topleft hamburger menu and select `Interfaces`.
+
+Click the green bottom-right Create interface btn:[+] button.
+
+Fill in a name for the interface. For instance "my_interface".
+
+Select the collection you created above in the collection dropdown.
+
+Finally click the btn:[Save] button.
+
+==== GraphQL
+
+Now that you have created an interface, you can use it to search for documents using GraphQL.
+
+In the list of interfaces click the btn:[GraphQL icon] button.
+
+This will open a GraphQL editor.
+
+If you aren't familiar with GraphQL, you might want to read up on it https://graphql.org/learn/.
+
+Try to change the searchString to "example" and click the btn:[Play] button.
+
+You should not see a search result with Example highlighted.
