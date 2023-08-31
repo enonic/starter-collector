@@ -2,6 +2,38 @@
 :toc: right
 :toclevels: 4
 
+== Project structure
+
+The previous step created the folder `myproject`, you should now have an app structure, looking something like this:
+
+.Selected files from the app code:
+[source,files]
+----
+src/
+ main/
+  resources/
+   assets/
+     js/
+      react/
+       Collector.tsx <1>
+       useCollectorState.ts <2>
+   tasks/
+    collect/
+     collect.ts
+     collect.xml
+   collectors.json <3>
+   documentTypes.json <4>
+gradle.properties <5>
+webpack.config.babel.js <6>
+----
+
+<1> React component with the form elements
+<2> State code for the React component
+<3> Configuration for one or more collectors present in this application.
+<4> Configuration for one or more document-types present in this application.
+<5> App settings and name
+<6> Compilation settings
+
 == Including the Explorer Library
 
 This should already be set up in the starter.
