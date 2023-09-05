@@ -62,7 +62,7 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 	context: path.resolve(__dirname, SRC_DIR),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: {
-		'tasks/collect/collect' : './tasks/collect/collect.ts'
+		'tasks/sample-collector/sample-collector' : './tasks/sample-collector/sample-collector.ts'
 	},
 	externals: SS_EXTERNALS,
 	mode: MODE,
