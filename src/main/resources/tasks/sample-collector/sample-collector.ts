@@ -1,4 +1,4 @@
-import type {CollectorConfig} from '../../index.d'
+import type {CollectorConfig} from '../..'
 
 
 // @ts-ignore
@@ -75,7 +75,7 @@ export function run({
 		}
 
 		collector.persistDocument(documentToPersist, {
-			documentTypeName: 'starter_explorer_collector_document_type'
+			documentTypeName: 'starter_doctype'
 		});
 		collector.addSuccess({
 			message: url

@@ -1,6 +1,6 @@
 [{
+	"displayName": "Sample Collector (Edit in collectors.json)",
+	"taskName": "sample-collector",
 	"componentPath": "window.LibCollector.Collector",
-	"configAssetPath": "js/react/Collector.esm.js",
-	"displayName": "Starter (Change me in src/main/resources/collectors.json)",
-	"taskName": "collect"
+	"configAssetPath": "js/react/Collector.esm.js"
 }]
