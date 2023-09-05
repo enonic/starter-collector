@@ -1,10 +1,11 @@
 = Build a custom Collector for Explorer
 :sectnums:
 :toc: right
-:toclevels: 6
 :enonicStart: https://developer.enonic.com/start
 
-This guide takes you through the steps of building a custom Collector for Explorer.
+Collectors are small programs that can fetch content from custom data sources, and index them with in Explorer.
+
+TIP: *New to Explorer?* Visit the https://developer.enonic.com/docs/explorer[Explorer docs] to get started.
 
 == Introduction
 
@@ -16,7 +17,7 @@ Task:: Code that performs the actual retrieval of content for indexing.
 
 This section will guide you through the basic steps of building your own custom collector.
 
-=== Install CLI
+== Install CLI
 
 The Enonic Command Line Interface is an essential tool for developers working with Enonic.
 
@@ -32,91 +33,95 @@ To see all available options, simply run `enonic`.
 
 TIP: To upgrade, use `enonic latest`. If there are new versions you will see instructions on how to upgrade.
 
-=== Sandbox
 
-==== Create
+== Create a sandbox
 
-A sandbox is a local developer instance of our platform - Enonic XP. Create a sandbox by running this command in your terminal:
+A sandbox is a local developer instance of our platform - Enonic XP. 
 
-  enonic sandbox create
+. Create a sandbox called `mycollector` by running this command in your terminal:
 
-Give it a name, i.e. `intro`, and select the most recent version of Enonic XP from the list that appears.
+  enonic sandbox create mycollector
 
-==== Start
+. Choose the latest version of Enonic XP (default).
 
-Start the sandbox with this command:
+. Start the sandbox with this command:
 
-  enonic sandbox start --dev
+  enonic sandbox start --dev mycollector
 
-Select the `intro` sandbox from the list, and it will boot up in development mode.
+TIP: Dev mode is used to automatically load changes in your code when developing.
 
-TIP: Dev mode will automatically load changes in your code when developing.
 
-=== Project
+== Create app
 
-==== Create
+From a **new terminal window**, run the following command to create the application.
 
-To set up a project locally, run the following command and complete the steps:
+  enonic project create -r starter-collector
 
-  enonic project create -r myproject
+IMPORTANT: If you have multiple sandboxes, choose the one created in the previous step.
 
-==== Selecting sandbox
+[TIP]
+====
+This command uses the https://github.com/enonic/starter-collector[Collector starter^] Github repo  as a starter (template) for the app.
+====
 
-From the project folder created (i.e. `myproject/`), run this command:
+=== Project structure
 
-  enonic project sandbox
+The project folder created should now contain a basic app structure, looking something like this:
 
-This command produces a .enonic file, which tells the enonic command which sandbox to use.
+[source,files]
+----
+docs/ //<1>
+src/
+  main/
+    resources/
+      assets/
+        js/
+          react/ //<2>
+      tasks/
+        collect/ //<3>
+      collectors.json <4>
+      documentTypes.json <5>
+----
 
-==== Build
+<1> The documentation your are reading now
+<2> React components for the collector form
+<3> Collector task is located here
+<4> Definition of collectors in the app
+<5> Optional list of document types
 
-From the project folder created (i.e. `myproject/`), run this command:
+== Build & deploy
 
-  enonic project build
-
-This command produces a .jar file in the folder `build/libs/` i.e. `build/libs/myproject.jar`
-
-==== Deploy
-
-From the project folder created (i.e. `myproject/`), run this command:
+From the app folder you created (i.e. `myproject/`), run this command:
 
   enonic project deploy
 
-This command copies the .jar file from the `build/libs/` folder into the sandbox home deploy folder.
+The application should now compile, and deploy to the sandbox.
 
 == Trying it out
 
-=== Enonic XP Dashboard
-
 Open a web broswer and visit the Enonic XP Dashboard at http://localhost:8080
 
-Either btn:[LOG IN AS ADMIN] or btn:[CREATE AN ADMIN USER] and log in with that.
+Click btn:[LOG IN AS GUEST], this will sign you in with super user pemissions.
 
-=== Explorer
+=== Install Explorer
 
-==== Install
+Next up, in order to use the collector you also need to install the Explorer application.
 
-In order to test the collector you need to install the Explorer application.
-
-Open the Applications app via the topright XP menu, or via http://localhost:8080/admin/tool/com.enonic.xp.app.applications/main
-
-Click the btn:[Install] button.
+Open `XP menu` -> `Applications` and click btn:[Install].
 
 Find Explorer in the list and click the btn:[Install] button.
 
-==== Open
-
-Open the Explorer app via the topright XP menu or via http://localhost:8080/admin/tool/com.enonic.app.explorer/explorer
+With Explorer installed, you can open the Explorer admin from the XP menu: `XP menu` -> `Explorer`
 
 === Document type
 
-Click the topleft hamburger menu and select btn:[Document types].
+In Explorer, click the hamburger menu and select btn:[Document types].
 
 Study the `document types`.
 
 Find the one named "starter_explorer_collector_document_type" and click the btn:[Edit] button.
 
-Since this `document type` comes from a collector app, it is markes as managed and shouldn't be edited.
+This `document type` comes from the collector app, it is marked as "managed" - which basically means it shouldn't be edited.
 
 As long as you don't make any changes and click the btn:[Save] button, you can safely click btn:[Yes] to edit the managed `document type`.
 
@@ -124,15 +129,13 @@ When editing the `document type`, you can now see details, edit or delete the `f
 
 Whenever a new verion of the collector app is deployed, the `document type` will be updated to the new version.
 
-So the best place to change the `document type` is in the collector app itself.
+Thus, the best place to change the `document type` is in the collector app itself.
 
 See <<Development>>
 
-=== Collection
+=== Create collection
 
-==== Create
-
-Click the topleft hamburger menu and select btn:[Collections].
+Click the hamburger menu and select btn:[Collections].
 
 Click the green bottom-right Create collection btn:[+] button.
 
@@ -142,7 +145,7 @@ Select the `Starter` collector in the collector dropdown.
 
 It will list the managed `document type(s)` the collector contains.
 
-If will also show the React form from the collector app.
+It will also show the React form from the collector app.
 
 Fill in an url in the url input. For instance https://example.com
 
@@ -150,31 +153,19 @@ Finally click the btn:[Save] button.
 
 The collection should now be visible in the list of collections.
 
-==== Collect
+=== Collect
 
 In the list of collections, click the btn:[green cloud download] button.
 
 This will start running the task from inside the collector app, using the url you filled in above.
 
-==== Status / Progress
+=== Progress
 
-While the collector task is running it's possible to see the status and progress of the task.
-
-Click the topleft hamburger menu and under `Collections` select the btn:[Status] menu item.
-
-On the status page you can keep an eye on the collector while it's running.
-
-==== Journal
-
-When the collector task has finished, you can see the result in the journal.
-
-Click the topleft hamburger menu and under `Collections` select the btn:[Journal] menu item.
-
-If everything went well, you should see a new entry in the journal with 1 success and 0 errors.
+The collector progress and result can be seen from the `Status` and `Journal` menu items - located just below the `Collector` itself.
 
 === Documents
 
-Now that you have a collection with a document, you can search for it under the documents page.
+Now that you have a collection with a document, you can search for it from the btn:[Documents] page.
 
 To limit the search to only documents from a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.
 
@@ -184,35 +175,6 @@ You should now get a search result with the document and the word you searched f
 
 If you search for a word that isn't in the document, the search result should be empty.
 
-=== Interface
-
-==== Create
-
-Now that you have a collection with a document, you can setup an interface to search for it using GraphQL.
-
-Click the topleft hamburger menu and select `Interfaces`.
-
-Click the green bottom-right Create interface btn:[+] button.
-
-Fill in a name for the interface. For instance "my_interface".
-
-Select the collection you created above in the collection dropdown.
-
-Finally click the btn:[Save] button.
-
-==== GraphQL
-
-Now that you have created an interface, you can use it to search for documents using GraphQL.
-
-In the list of interfaces click the btn:[GraphQL icon] button.
-
-This will open a GraphQL editor.
-
-If you aren't familiar with GraphQL, you might want to read up on it https://graphql.org/learn/.
-
-Try to change the searchString to "example" and click the btn:[Play] button.
-
-You should not see a search result with Example highlighted.
 
 == Development
 
