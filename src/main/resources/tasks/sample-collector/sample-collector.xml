@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <task>
-	<description>Collect</description>
+	<description>Sample Collector (edit in sample-collector.xml)</description>
 	<form>
 		<input name="collectionId" type="TextLine">
 			<label>Collection ID</label>
