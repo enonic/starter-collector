@@ -109,13 +109,13 @@ task webpack(type:NodeTask) {
 	args = [
 		'--color'
 	]
-	dependsOn yarn_install
+	dependsOn npmInstall
 	environment = [
 		'FORCE_COLOR': 'true',
 		'LOG_LEVEL_FROM_GRADLE': gradle.startParameter.logLevel.toString(),
 		'NODE_ENV': project.hasProperty('dev') || project.hasProperty('development') ? 'development' : 'production'
 	]
-	mustRunAfter yarn_install
+	mustRunAfter npmInstall
 	outputs.dir './build/resources/main' // processResources will delete the directory if this is not present
 	script = file('node_modules/webpack-cli/bin/cli.js')
 }
