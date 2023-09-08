@@ -1,0 +1,72 @@
+= Collector task
+:toc: right
+:toclevels: 4
+:enonicTasks: https://developer.enonic.com/docs/xp/stable/framework/tasks
+
+In this chapter you will learn about tasks, the heart of a collector
+
+== Task
+
+Collectors essentially build on a standard feature of the Enonic framework - tasks. Tasks provide out-of-the-box support for running background jobs with ease. Tasks can also be scheduled.
+
+For more detais on this, visit the {enonicTasks}[task documentation].
+
+
+TODO:
+
+An example is provided in the starter.
+
+TIP: A more advanced "example" can be found {githubWebcrawl}[here].
+
+It uses the normal but has some useful extensions.
+
+Task files:
+
+
+
+
+=== collect.xml
+
+The task receives the following properties, when called from the Explorer Admin GUI Application:
+
+* collectionId
+* collectorId
+* configJson
+* language
+
+The task descriptor xml must declare these properties:
+
+./src/main/resources/tasks/collect/collect.xml
+[,xml]
+----
+include::../src/main/resources/tasks/collect/collect.xml[]
+----
+
+=== collect.ts
+
+The task controller typescript file can then pass on these properties via the Collector class constructor:
+
+./src/main/resources/tasks/collect/collect.ts
+[source,typescript]
+----
+import {Collector} from '/lib/explorer';
+
+export function run({
+    collectionId,
+    collectorId,
+    configJson,
+    language
+}) {
+    const collector = new Collector<CollectorConfig>({
+        collectionId, collectorId, configJson, language
+    });
+}
+----
+
+In order to understand the example provided in the starter I suggest consulting the <<api/task, Collector Task API>> documentation while reading the code:
+
+./src/main/resources/tasks/collect/collect.ts
+[,typescript]
+----
+include::../src/main/resources/tasks/collect/collect.ts[]
+----

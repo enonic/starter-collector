@@ -4,17 +4,20 @@
             "title": "Introduction",
             "document": "index"
         }, {
-            "title": "Development",
-            "document": "development"
+            "title": "Setup",
+            "document": "setup"
+        }, {
+            "title": "Overview",
+            "document": "overview"
+        }, {
+            "title": "Task",
+            "document": "task"
+        }, {
+            "title": "Form",
+            "document": "form"
         }, {
             "title": "API",
-            "menuItems": [{
-                "title": "React",
-                "document": "react"
-            },{
-                "title": "Task",
-                "document": "task"
-            }]
+            "document": "api"
         }
     ]
 }

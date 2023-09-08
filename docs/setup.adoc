@@ -1,0 +1,153 @@
+= Setting up your development environment
+:sectnums:
+:toc: right
+:enonicStart: https://developer.enonic.com/start
+
+In this chapter you will create, buid, deploy and run a collector based on a template.
+
+== Introduction
+
+Collectors are implemented as standard Enonic applications. This chapter will guide you through the basic steps of building your own custom collector.
+
+NOTE: The following steps will require https://developer.enonic.com/start[Enonic CLI] to be installed
+
+== Create a sandbox
+
+
+A sandbox is a local developer instance of our platform - Enonic XP. 
+
+. Create a sandbox called `mycollector` by running this command in your terminal:
+
+  enonic sandbox create mycollector
+
+. Choose the latest version of Enonic XP (default).
+. Start the sandbox with this command:
+
+  enonic sandbox start --dev mycollector
+
+TIP: Dev mode is used to automatically load changes in your code when developing.
+
+
+== Create the app
+
+From a **new terminal window**, run the following command to create the application.
+
+  enonic project create -r starter-collector
+
+IMPORTANT: Choose the sandbox created in the previous step (if you have multiple sandboxes).
+
+[TIP]
+====
+This command uses the https://github.com/enonic/starter-collector[Collector starter^] Github repo  as a starter (template) for the app.
+====
+
+=== Project structure
+
+The project folder created should now contain a basic app structure, looking something like this:
+
+[source,files]
+----
+docs/ //<1>
+src/
+  main/
+    resources/
+      assets/
+        js/
+          react/ //<2>
+      tasks/
+        collect/ //<3>
+      collectors.json <4>
+      documentTypes.json <5>
+----
+
+<1> The documentation your are reading now
+<2> React components for the collector form
+<3> Collector task is located here
+<4> Definition of collectors in the app
+<5> Optional list of document types
+
+We will get back to these files in the next chapter.
+
+== Build & deploy
+
+From the app folder you created (i.e. `myproject/`), run this command:
+
+  enonic project deploy
+
+The application should now compile, and deploy to the sandbox.
+
+== Trying it out
+
+Open a web broswer and access the Enonic XP Dashboard at http://localhost:8080
+
+Click btn:[LOG IN AS GUEST], this will sign you in with super user pemissions.
+
+=== Install Explorer
+
+Next up, in order to use the collector you also need to install the Explorer application.
+
+Open `XP menu` -> `Applications` and click btn:[Install].
+
+Find Explorer in the list and click the btn:[Install] button.
+
+With Explorer installed, you can open the Explorer admin from the XP menu: `XP menu` -> `Explorer`
+
+=== Document type
+
+Document types are used to control indexing of content, and collectors may automatially provide document types. These are called "managed document types". 
+
+Back in Explorer, click the hamburger menu and select btn:[Document types].
+
+You should now find a document type called `starter_doctype`, to see the detais - select it and click the btn:[Edit] button.
+
+As this is a manage type, you will have to ignore the warning. As long as you don't make any changes this is perfectly safe.
+
+Whenever a new verion of the collector app is deployed, the manage document types will be updated to the new version.
+
+
+=== Create collection
+
+To try out the new collector, click the hamburger menu and select btn:[Collections].
+
+Click the green bottom-right Create collection btn:[+] button. Fill in a name and select a Default language for the collection. For instance en-US.
+
+Select the `Sample collector` in the collector dropdown.
+
+After selecting the collector, a simple form will appear. This form was bundled with your collector and can be customized to your needs. As you will see laster.
+
+Fill in the URL field with this value: `https://example.com`
+
+Save the new collection.
+
+=== Collect
+
+Its time to give the collector a spin. From the collections list, simply click the btn:[green cloud download] icon.
+
+This will start running the task from inside the collector app, using the url you filled in above. It should complete within seconds, and the document count should increase to `1`.
+
+NOTE: If you don't see any changes, try refreshing, check the sandbox logs, or visit the `Journal` menu items - located just below `Collections` in the menu.
+
+
+Now that you have a collection with a document, you may search for it from the btn:[Documents] page.
+
+To limit the search to only documents from a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.
+
+Fill in a search term in the search input. For instance "example" and hit kbd:[Enter].
+
+You should now get a search result with the document and the word you searched for highlighted.
+
+If you search for a word that isn't in the document, the search result should be empty.
+
+
+== Development
+
+Now that you have familiarized yourself with the Explorer app, it's time to start developing your own collector.
+
+Continue to <<Development>>.
+
+
+. They essentially consist of two main components:
+
+Form:: A React based user interface that enable search administrators to instruct the collector in it’s specific activities.
+
+Task:: Code that performs the actual retrieval of content for indexing.
