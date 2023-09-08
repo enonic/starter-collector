@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { EsbuildPlugin } from 'esbuild-loader';
+import { globSync } from 'glob';
 import path from 'path';
 import { print } from 'q-i';
 // import TerserPlugin from 'terser-webpack-plugin';
@@ -30,11 +31,14 @@ const STATS = {
 
 const WEBPACK_CONFIG = [];
 
+const dict = arr => Object.assign(...arr.map(([k, v]) => ({ [k]: v })));
+
 //──────────────────────────────────────────────────────────────────────────────
 // Enonic XP server-side ECMAScript
 //──────────────────────────────────────────────────────────────────────────────
-const SRC_DIR = 'src/main/resources';
-const DST_DIR = 'build/resources/main';
+const DIR_SRC = 'src/main/resources';
+const DIR_SRC_ASSETS = `${DIR_SRC}/assets`;
+const DIR_DST = 'build/resources/main';
 
 const SS_EXTERNALS = [
 	'/lib/cache', // lib-explorer
@@ -58,12 +62,27 @@ if (MODE === 'production') {
 	SS_ALIAS['/lib/explorer'] = path.resolve(__dirname, '../lib-explorer/src/main/resources/lib/explorer/');
 }
 
+const GLOB_EXTENSIONS_SERVER = '{ts,js}';
+const FILES_SERVER = globSync(
+	`${DIR_SRC}/**/*.${GLOB_EXTENSIONS_SERVER}`,
+	{
+		absolute: false,
+		ignore: globSync(`${DIR_SRC_ASSETS}/**/*.${GLOB_EXTENSIONS_SERVER}`).concat(
+			globSync(`${DIR_SRC}/**/*.d.ts`)
+		)
+	}
+);
+// print(FILES_SERVER, { maxItems: Infinity });
+const ENTRY_SERVER = dict(FILES_SERVER.map(k => [
+	k.replace(`${DIR_SRC}/`, '').replace(/\.[^.]*$/, ''), // name
+	`.${k.replace(`${DIR_SRC}`, '')}` // source relative to context
+]));
+// print(ENTRY_SERVER, { maxItems: Infinity });
+
 const SERVER_SIDE_ECMASCRIPT_CONFIG = {
-	context: path.resolve(__dirname, SRC_DIR),
+	context: path.resolve(__dirname, DIR_SRC),
 	devtool: false, // Don't waste time generating sourceMaps
-	entry: {
-		'tasks/sample-collector/sample-collector' : './tasks/sample-collector/sample-collector.ts'
-	},
+	entry: ENTRY_SERVER,
 	externals: SS_EXTERNALS,
 	mode: MODE,
 	module: {
@@ -154,7 +173,7 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 	output: {
 		filename: '[name].js',
 		libraryTarget: 'commonjs',
-		path: path.join(__dirname, DST_DIR)
+		path: path.join(__dirname, DIR_DST)
 	},
 	performance: {
 		hints: false
@@ -187,11 +206,10 @@ WEBPACK_CONFIG.push(SERVER_SIDE_ECMASCRIPT_CONFIG);
 const ES_BUILD_TARGET = 'es2015';
 //const ES_BUILD_TARGET = 'esnext';
 
-const SRC_ASSETS_DIR = 'src/main/resources/assets';
 const DST_ASSETS_DIR = 'build/resources/main/assets';
 
 const CLIENT_SIDE_ES_CONFIG = {
-	context: path.join(__dirname, SRC_ASSETS_DIR, 'js', 'react'),
+	context: path.join(__dirname, DIR_SRC_ASSETS, 'js', 'react'),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: {
 		'Collector': './Collector.tsx'
