@@ -149,6 +149,7 @@ processResources {
 	exclude '**/*.sass'
 	exclude '**/*.scss'
 	exclude '**/*.styl'
+	exclude '**/*.ts'
 }
 
 
