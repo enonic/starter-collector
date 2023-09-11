@@ -17,9 +17,9 @@ The Collector class provides useful methods in order to:
 
 Any configuration passed in via configJson is available as a javascript object via the config property.
 
-=== Methods
+== Methods
 
-==== constructor()
+=== constructor()
 
 This method:
 
@@ -27,7 +27,7 @@ This method:
 * Gets information about the Collection.
 * Parses the configJson and provides the result via the config property.
 
-==== start()
+=== start()
 
 This method:
 
@@ -37,47 +37,47 @@ This method:
 * Persists information that the collector is running (so it can't be run twice in parallel, but can be stopped).
 * Sets up a journal to write state information to.
 
-==== queryDocuments()
+=== queryDocuments()
 
 This method makes is possible to query the exisiting documents in the collection.
 Useful to find the document id to modify an existing document, rather than creating a new one.
 
-==== persistDocument()
+=== persistDocument()
 
 This method will create or modify a document, based on its parameters.
 If can also extend a documentType and validate against it.
 
-==== deleteDocument()
+=== deleteDocument()
 
 This method makes it possible to delete one or more documents from the collection.
 
-==== getDocumentNode()
+=== getDocumentNode()
 
 This method makes it possible to get one ore more documents from the collection.
 
-==== shouldStop()
+=== shouldStop()
 
 This method checks whether the STOP button has be clicked in the Explorer Admin GUI.
 
 Useful to finish gracefully, for instance by breaking loops.
 
-==== addSuccess()
+=== addSuccess()
 
 Adds a success to the journal.
 
-==== addInformation()
+=== addInformation()
 
 Adds useful information to the journal.
 
-==== addWarning()
+=== addWarning()
 
 Adds a warning to the journal.
 
-==== addError()
+=== addError()
 
 Adds an error to the journal.
 
-==== stop()
+=== stop()
 
 This method:
 

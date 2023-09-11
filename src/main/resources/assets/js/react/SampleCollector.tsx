@@ -2,7 +2,7 @@ import type {
 	CollectorComponentRef,
 	CollectorProps
 } from '/lib/explorer/types/index.d';
-import type {CollectorConfig} from '../../../index.d'
+import type {CollectorConfig} from '../../..'
 
 
 import * as React from 'react';
