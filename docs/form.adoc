@@ -1,7 +1,19 @@
-= React form component(s)
+= Collector form
+:toc: right
+:toclevels: 3
 
-In order for your collector's configuration user interface to work in Explorer you must provide a React component.
-Any react component type should be supported, but all examples are functional (since that is the current status quo of react).
+In this section we'll cover the basics of how to create the collector forms.
+
+
+== Introduction
+
+Collectors can be configured on a per collection basis - using forms. The forms are built with React components.
+
+In theory, any react component type should be supported.
+
+TODO Screenshot of form:
+
+== Basics
 
 The component receives four props from Explorer:
 
@@ -9,6 +21,11 @@ The component receives four props from Explorer:
 . setCollectorConfig - A function to modify the config state object.
 . setCollectorConfigErrorCount - A function to set how many validation errors the form has.
 . ref - A reference which makes it possible for the parent (Explorer Admin) to call functions inside this child component.
+
+
+
+
+
 
 == collectorConfig
 

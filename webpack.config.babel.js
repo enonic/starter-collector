@@ -212,7 +212,7 @@ const CLIENT_SIDE_ES_CONFIG = {
 	context: path.join(__dirname, DIR_SRC_ASSETS, 'js', 'react'),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: {
-		'Collector': './Collector.tsx'
+		'SampleCollector': './SampleCollector.tsx'
 	},
 	externals: {
 		react: 'React',
@@ -256,7 +256,7 @@ const CLIENT_SIDE_ES_CONFIG = {
 	},
 	output: {
 		filename: '[name].esm.js',
-		library: 'Lib[name]',
+		library: '[name]',
 		libraryTarget: 'var', // variable defined in root scope
 		path: path.join(__dirname, DST_ASSETS_DIR, 'js', 'react')
 	},
