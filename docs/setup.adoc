@@ -41,32 +41,6 @@ IMPORTANT: Choose the sandbox created in the previous step (if you have multiple
 This command uses the https://github.com/enonic/starter-collector[Collector starter^] Github repo  as a starter (template) for the app.
 ====
 
-=== Project structure
-
-The project folder created should now contain a basic app structure, looking something like this:
-
-[source,files]
-----
-docs/ //<1>
-src/
-  main/
-    resources/
-      assets/
-        js/
-          react/ //<2>
-      tasks/
-        collect/ //<3>
-      collectors.json <4>
-      documentTypes.json <5>
-----
-
-<1> The documentation your are reading now
-<2> React components for the collector form
-<3> Collector task is located here
-<4> Definition of collectors in the app
-<5> Optional list of document types
-
-We will get back to these files in the next chapter.
 
 == Build & deploy
 
