@@ -256,8 +256,10 @@ const CLIENT_SIDE_ES_CONFIG = {
 	},
 	output: {
 		filename: '[name].esm.js',
-		library: '[name]',
-		libraryTarget: 'var', // variable defined in root scope
+		library: {
+			name: '[name]',
+			type: "global"
+		},
 		path: path.join(__dirname, DST_ASSETS_DIR, 'js', 'react')
 	},
 	performance: {
