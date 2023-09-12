@@ -1,6 +1,6 @@
 [{
 	"displayName": "Sample Collector (Edit in collectors.json)",
-	"taskName": "sample-collector",
 	"formLibraryName": "SampleCollector",
-	"formAssetPath": "collector/form/SampleCollector.esm.js"
+	"formAssetPath": "collector/form/SampleCollector.esm.js",
+	"taskName": "sample-collector"
 }]
