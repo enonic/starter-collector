@@ -6,13 +6,13 @@ This chapter covers the anatomy of the application.
 
 == Collector basics
 
-A collector typically consists of three items
+A collector typically consists of the following items
 
-Document type(s):: For pre-defined indexing rules. 
+Document type(s):: For pre-defined indexing of different types of data 
 
 Task:: Which is the code that actually performs the job (and can be scheduled)
 
-Form:: To configure the collector when deployed to a collection.
+Form:: To enable configuration of a collector (on a per collection basis)
 
 Let's dive into the details.
 
@@ -26,35 +26,29 @@ In your project folder, you should find a file structure looking like this:
 src/
  main/
   resources/
-   assets/
-     js/
-      react/
-       Collector.tsx <1>
-       useCollectorState.ts <2>
-   tasks/
-    collect/
-     collect.ts
-     collect.xml
+   assets/ <1>
+   tasks/ <2>
    collectors.json <3>
    documentTypes.json <4>
-gradle.properties <5>
-build.gradle <6>
+build.gradle <5>
+gradle.properties <6>
 webpack.config.babel.js <7>
 ----
 
-<1> React component with the form elements.
-<2> State code for the React component.
-<3> Configuration for one or more collectors present in this application.
-<4> Configuration for one or more document-types present in this application.
-<5> App settings and name
-<6> Contains list of Enonic dependencies
-<7> JS compilation setup
+<1> JavaScript assets for the collector form goes here
+<2> The code which will perform the actual work goes here
+<3> Declaration of collectors in the app
+<4> Location of document types bundled with the collector
+<5> Enonic app dependencies
+<6> App settings and name
+<7> JS build file
 
-=== build.gradle
 
-The main purpose of this file is to ensure you have the proper dependency setup. 
+== build.gradle
 
-NOTE: Ensure you are using a version of https://github.com/enonic/lib-explorer[lib-explorer] that is supported by your Explorer instance.
+The main purpose of this file is to ensure you have the proper dependency setup. The essential part is using the right version of `lib-explorer` 
+
+NOTE: Ensure you are using a version of https://github.com/enonic/lib-explorer[lib-explorer] that is supported by your version of Explorer.
 
 .build.gradle
 [source,gradle]
@@ -64,65 +58,5 @@ include 'com.enonic.lib:lib-explorer:4.0.0'
 ...
 ----
 
-=== collectors.json
 
-This file acts as a registry of collectors within this application. An application may contain multiple collectors.
-
-.src/main/resources/collectors.json
-[,json]
-----
-include::../src/main/resources/collectors.json[]
-----
-
-NOTE: The library name must match up between webpack.config.babel.js and src/main/resources/collectors.json
-
-TODO: Check this?
-CAUTION: Since all collector forms are loaded into the same "global" scope in the browser, it's important that each collector has an unique library name. Not only inside a single collector app, but across all installed collector apps.
-
-
-=== Webpack
-
-This app uses Webpack for TypeScript compilation.
-Make sure the library name is alligned with collectors.json
-
-TODO verify.
-
-.webpack.config.babel.js
-[source,java]
-----
-const config = {
-    entry: {
-        'Collector': './Collector.tsx', <1>
-    },
-    output: {
-        filename: '[name].esm.js',
-        library: 'Lib[name]', <2>
-        libraryTarget: 'var',
-    }
-}
-----
-<1> The entry object keys will become part of the library name.
-<2> Since the entry name is "Collector", the library name will be "LibCollector".
-
-== documentTypes.json
-
-Applications may optionally include one or more document types. These are referred to as "managed", as opposed to types that are edited directly from Explorer.
-
-CAUTION: Remember that each document type must have a gobally unique name. As such prefixing is highly recommended.
-
-.Thw bundled `starter_doctype`: 
-[source,JSON]
-----
-include::../src/main/resources/documentTypes.json[]
-----
-
-TIP: This name can be used directly when persisting documents in your collector task code:
-
-./src/main/resources/tasks/collect/collect.ts
-[source,typescript]
-----
-collector.persistDocument(documentToPersist, {
-    documentTypeName: 'starter_documenttype'
-});
-----
 

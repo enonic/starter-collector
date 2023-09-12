@@ -10,6 +10,9 @@
             "title": "Overview",
             "document": "overview"
         }, {
+            "title": "Document type",
+            "document": "doctype"
+        }, {
             "title": "Task",
             "document": "task"
         }, {
