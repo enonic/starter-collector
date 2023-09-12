@@ -9,7 +9,6 @@ In this chapter you will learn about tasks, the heart of a collector
 
 Collectors essentially build on a standard feature of the Enonic framework - tasks. Tasks provide out-of-the-box support for running background jobs with ease. Also, tasks can be scheduled via the Enonic framework.
 
-
 == Task 
 
 Tasks are essentially JS controllers, following a specific pattern.
@@ -34,7 +33,17 @@ src/
 
 For more detais on tasks, visit the {enonicTasks}[task documentation].
 
-NOTE: Feel free to give your collector task a different name, but remember to update your `collectors.json` file.
+Additionally, the task must be explicitly declared in the `collectors.json` file.
+
+./src/main/resources/collectors.json
+[source,JSON]
+----
+include::../src/main/resources/collectors.json[]
+----
+
+As you can see from the above file, the task name is listed per collector definition. This means two different collectors could potentially use the same task.
+
+NOTE: Remember to update collectors.json if you change the name of your task.
 
 === Schema
 

@@ -1,6 +1,6 @@
 [{
 	"displayName": "Sample Collector (Edit in collectors.json)",
 	"taskName": "sample-collector",
-	"componentPath": "window.SampleCollector.Collector",
-	"configAssetPath": "js/react/SampleCollector.esm.js"
+	"formLibraryName": "SampleCollector",
+	"formAssetPath": "collector/form/SampleCollector.esm.js"
 }]

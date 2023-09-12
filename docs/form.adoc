@@ -2,8 +2,7 @@
 :toc: right
 :toclevels: 3
 
-In this section we'll cover the basics of how to create the collector forms.
-
+This section covers the basics of how to create collector forms.
 
 == Introduction
 
@@ -13,35 +12,92 @@ In theory, any react component type should be supported.
 
 TODO Screenshot of form:
 
-== Basics
+== Setup
 
-The component receives four props from Explorer:
+The React-based collection forms are dynamically injected into the Collector form. For this to work properly, each form must comply to the following rules:
 
-. collectorConfig - Config state object.
-. setCollectorConfig - A function to modify the config state object.
-. setCollectorConfigErrorCount - A function to set how many validation errors the form has.
-. ref - A reference which makes it possible for the parent (Explorer Admin) to call functions inside this child component.
+* It must provide a globally unique library name
+* It must provide a JavaScript asset that can be loaded by Explorer client side
+
+Both of these values are configured in the collectors.json file, Let's have a look:
+
+./src/main/resources/collectors.json
+[source,JSON]
+----
+include::../src/main/resources/collectors.json[]
+----
+
+formAssetPath:: Defines the location of the compiled JS asset, so Explorer admin can load it dynamically.
++
+NOTE: As part of the XP framework, files placed in `/src/main/resources/assets/` folder are publicly accessible.
+
+formLibraryName:: This declares where React can find the CollectorForm component in the global scope. It must be globally unique.
 
 
+== Buildscript
+
+In this application, the form is coded with TypeScript. This means it must be transpiled to JavaScript before it can be deployed.
+
+Here, the source files are placed in the assets folder:
+
+.src/main/resources/assets
+[source,files]
+----
+collector/
+    form/
+        SampleCollectorForm.tsx <1>
+        useCollectorState.ts <2>
+        useUpdateEffects.ts <3>
+----
+
+<1> The main React file, it must have an export called `CollectorForm`
+<2> Example state handling 
+<3> Example of a custom hook
+
+Webpack is used to build the output files, this is where you need to make sure things are aligned with `collectors.json`.
+
+.webpack.config.babel.js
+[source,JavaScript]
+----
+...
+const config = { 
+    entry: {
+        'SampleCollector': './SampleCollectorForm.tsx', <1>
+    },
+    ...
+    output: {
+        filename: '[name].esm.js', <2>
+        library: {
+            name: '[name]', 
+            type: 'global'
+            },
+    }
+}
+...
+----
+<1> `SampleCollector` is here the library name, which must be globally unique.
+<2> Here, the entry name is used to make the asset output file called `SampleCollector.esm.js`
+
+You are free to make your own build setup, as long as things line up with `collectors.json`.
 
 
+== Form props
+
+The CollectorForm component receives tree standard props from Explorer:
+
+collectorConfig:: This is a standard React.useState object. You can write any nested configuration properties you need to it (using the setCollectorConfig function). When the form is successfully submitted, the state object is persisted. Which means the next time the form is opened, the previous state is available.
+
+setCollectorConfig:: This is a standard setState function returned by React.useState. Use it to change the state of the collectorConfig object.
+
+setCollectorConfigErrorCount:: This is a standard setState function returned by React.useState. Use it to allow or prevent form submission. 0 errors are required to allow form submission.
 
 
-== collectorConfig
+== Forward ref
 
-This is a standard React.useState object. You can write any nested configuration properties you need to it (using the setCollectorConfig function). When the form is successfully submitted, the state object is persisted. Which means the next time the form is opened, the previous state is available.
+Additionally, React passes a reference which makes it possible for the parent (Explorer Admin) to call functions inside this child component (the CollectorForm).
 
-== setCollectorConfig
+The CollectorForm component can then pass two named function references to it's parent component (Explorer Admin).
 
-This is a standard setState function returned by React.useState. Use it to change the state of the collectorConfig object.
-
-== setCollectorConfigErrorCount
-
-This is a standard setState function returned by React.useState. Use it to allow or prevent form submission. 0 errors are required to allow form submission.
-
-== ref
-
-The react component can pass two named function references to it's parent component (Explorer Admin).
 
 === afterReset
 

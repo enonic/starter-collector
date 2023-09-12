@@ -209,10 +209,10 @@ const ES_BUILD_TARGET = 'es2015';
 const DST_ASSETS_DIR = 'build/resources/main/assets';
 
 const CLIENT_SIDE_ES_CONFIG = {
-	context: path.join(__dirname, DIR_SRC_ASSETS, 'js', 'react'),
+	context: path.join(__dirname, DIR_SRC_ASSETS, 'collector', 'form'),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: {
-		'SampleCollector': './SampleCollector.tsx'
+		'SampleCollector': './SampleCollectorForm.tsx'
 	},
 	externals: {
 		react: 'React',
@@ -260,7 +260,7 @@ const CLIENT_SIDE_ES_CONFIG = {
 			name: '[name]',
 			type: "global"
 		},
-		path: path.join(__dirname, DST_ASSETS_DIR, 'js', 'react')
+		path: path.join(__dirname, DST_ASSETS_DIR, 'collector', 'form')
 	},
 	performance: {
 		hints: false

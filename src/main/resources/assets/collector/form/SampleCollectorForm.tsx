@@ -10,7 +10,7 @@ import {Form} from 'semantic-ui-react';
 import {useCollectorState} from './useCollectorState'
 
 
-export const Collector = React.forwardRef(
+export const CollectorForm = React.forwardRef(
 	(
 		{
 			collectorConfig,
