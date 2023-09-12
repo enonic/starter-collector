@@ -1,5 +1,4 @@
 = Building custom Collectors
-:sectnums:
 :toc: right
 :enonicStart: https://developer.enonic.com/start
 
