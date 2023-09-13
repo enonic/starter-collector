@@ -120,3 +120,5 @@ React.useImperativeHandle(ref, () => ({
     validate
 }));
 ----
+
+So, you have a document type, and a form - it's time to check out the heart of the collector - <<task#, tasks>>.
