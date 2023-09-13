@@ -13,9 +13,9 @@ Collectors essentially build on a standard feature of the Enonic framework - tas
 
 Tasks are essentially JS controllers, following a specific pattern.
 
-Your app contains an example task, located in the following file structure:
+Your app contains an example task within in the following file structure:
 
-.Application file structure:
+.Application code:
 [source,files]
 ----
 src/
@@ -33,7 +33,11 @@ src/
 
 For more detais on tasks, visit the {enonicTasks}[task documentation].
 
-Additionally, the task must be explicitly declared in the `collectors.json` file.
+== Collectors.json
+
+The task must be explicitly declared in the `collectors.json` file. 
+
+WARNING: The task name is the name of the collector, it must be unique within the app. Changing the name of the task will break the link between Explorer and the collector. 
 
 ./src/main/resources/collectors.json
 [source,JSON]
@@ -41,20 +45,22 @@ Additionally, the task must be explicitly declared in the `collectors.json` file
 include::../src/main/resources/collectors.json[]
 ----
 
-As you can see from the above file, the task name is listed per collector definition. This means two different collectors could potentially use the same task.
+As you can see from the above file, the task name is listed per collector definition.
 
-NOTE: Remember to update collectors.json if you change the name of your task.
+== Task schema
 
-=== Schema
+The task schema is defined in `sample-collector.xml`.
 
-In your application, the schema is called `sample-collector.xml`.
+This file basically defines an interface for tasks. It should basically look the same for all collectors (remember, you may have multiple collectors within a single app).
 
-This file will basically look the same for all collector tasks (remember, you may have multiple collectors within a single app). The file basically declares the parameters which will be passed to the controller:
+The following fields are defined:
 
-* collectionId
-* collectorId
-* configJson
-* language
+collectionId:: Which collection is calling the collector
+collectorId:: Registered ID of this collector
+configJson:: Configuration based on the collector form
+language:: Default language, as specified by the collector
+
+This is what the schema looks like:
 
 ./src/main/resources/tasks/collect/collect.xml
 [,xml]
@@ -62,14 +68,15 @@ This file will basically look the same for all collector tasks (remember, you ma
 include::../src/main/resources/tasks/sample-collector/sample-collector.xml[]
 ----
 
-=== Controller
+== Task controller
 
-In your application, the task controller is called `sample-collector.ts`.
+The actual task controller supplied by the starter is called `sample-collector.ts`.
 
-NOTE: This task controller is written in TypeScript, and will be compiled to JavaScript when deploying:
+NOTE: This task controller is written in TypeScript, and will be compiled to JavaScript by the build script.
 
+We'll not dive into the exact details of how the controller gets its data, but rather look at the two most common parts of any collector task:
 
-*Constructor*
+=== Constructor
 
 Every collector needs to implement the `run()` function, and accept the standard parameters - as defined above. 
 
@@ -90,11 +97,11 @@ export function run({
 }
 ----
 
-*Persisting*
+=== Persisting
 
-We will not go into details on the actual implementation of how this collector fetches data, but a common element for probably any collector is to index data in the end.
+Another common element for any collector is to store documents in Explorer, for indexing and search.
 
-Remember, a document is essentially a JSON file.
+NOTE: Remember, a document is essentially a JSON file.
 
 .Example code for persisting a document
 [source,TypeScript]
@@ -111,8 +118,8 @@ collector.persistDocument(documentToPersist, {
 }
 ----
 
-Feel free to study the full task controller code for more details. 
+NOTE: Feel free to study the full task controller code for more details. 
 
-TIP: For a more extensive example - check out the https://github.com/enonic/app-explorer/tree/master/src/main/resources/tasks/webcrawl[Webcrawler collector code]. This Webcrawler is shipped with Explorer by default.
+For an extensive task example - check out the https://github.com/enonic/app-explorer/tree/master/src/main/resources/tasks/webcrawl[Webcrawler collector code]. The Webcrawler is shipped with Explorer by default.
 
-Visit the <<api#, Collector API documentation>> for a complete list of available functions.
+Check out the https://developer.enonic.com/docs/explorer/[Collector API documentation] for a complete list of available functions.

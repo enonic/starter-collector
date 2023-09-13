@@ -5,35 +5,28 @@
 Diving into the topic of embedding document types with your collector.
 
 
-== Document types
+== Introduction
 
 Document types are used to control indexing of content. Applications may optionally include one or more document types. These are referred to as "managed", as opposed to document types that are edited directly from the Explorer admin UI.
 
 Whenever a new verion of the collector app is deployed, the manage document types will be updated to the new version.
 
 
-== Bundled example
+== Bundling
 
-TODO
-Screenshot
+When installing an application that contains document types, Explorer will automatically pick up and register them. 
 
-
-== documentTypes.json
-
-
-When installing an application that contains document types, Explorer will automatically register these when the application is started.
-
-CAUTION: Remember that each document type must have a globaly unique name to avoid conflicting with other document types. As such prefixing is highly recommended - i.e. `mycompany_doctypename`
+All you need to do is adding a file called `documentTypes.json` in your app.
 
 Below is what the document type bundled with the starter looks like:
 
-.The bundled `starter_doctype`: 
+.src/main/resources/documentTypes.json: 
 [source,JSON]
 ----
 include::../src/main/resources/documentTypes.json[]
 ----
 
-TIP: The doctype name is used when the collector persists documents.
+CAUTION: Each document type must have a globaly unique name to avoid conflicting with other document types. As such prefixing is highly recommended - i.e. `mycompany_doctypename`
 
 
-With the document types sorted out, let's dive into <<task#, the heart of the collector - tasks>>.
+With the document types sorted out, let's find out how you can configure your collector through a <<form#, form>>.

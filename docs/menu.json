@@ -13,14 +13,11 @@
             "title": "Document type",
             "document": "doctype"
         }, {
-            "title": "Task",
-            "document": "task"
-        }, {
             "title": "Form",
             "document": "form"
         }, {
-            "title": "API",
-            "document": "api"
+            "title": "Task",
+            "document": "task"
         }
     ]
 }

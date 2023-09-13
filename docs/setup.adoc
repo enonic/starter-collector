@@ -97,8 +97,6 @@ You should now get a search result with the document and the word you searched f
 If you search for a word that isn't in the document, the search result should be empty.
 
 
-== Next
-
 Now that you have your app up and running, it's time to dive into the details.
 
 Continue to <<overview#, the overview chapter>>.
