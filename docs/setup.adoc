@@ -1,5 +1,6 @@
 = Setting up your development environment
 :toc: right
+:experimental:
 :enonicStart: https://developer.enonic.com/start
 
 In this chapter you will create, buid, deploy and run a collector based on a template.
