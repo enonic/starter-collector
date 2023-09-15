@@ -629,39 +629,41 @@ Choose the sandbox created in the previous step (if you have multiple sandboxes)
 <div class="paragraph">
 <p>This will start the task in the collector app, fetch and index the page of the URL you filled in above.</p>
 </div>
-</li>
-</ol>
-</div>
 <div class="paragraph">
 <p>It should complete within seconds, and the document count should increase to <code>1</code>.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you don&#8217;t see any changes, try refreshing, check the sandbox logs, or visit the <code>Journal</code> menu items - located just below <code>Collections</code> in the menu.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Search</p>
 <div class="paragraph">
-<p>+
-NOTE: If you don&#8217;t see any changes, try refreshing, check the sandbox logs, or visit the <code>Journal</code> menu items - located just below <code>Collections</code> in the menu.</p>
+<p>Now that you have a collection with a document, you may search for it from the btn:[Documents] page.</p>
 </div>
 <div class="paragraph">
-<p>+
-. Search</p>
+<p>To limit the search to a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.</p>
 </div>
 <div class="paragraph">
-<p>+
-Now that you have a collection with a document, you may search for it from the btn:[Documents] page.</p>
+<p>Fill in a search term in the search input. For instance "example" and hit kbd:[Enter].</p>
 </div>
 <div class="paragraph">
-<p>+
-To limit the search to a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.</p>
+<p>You should now get a search result with the document and the word you searched for highlighted.</p>
 </div>
 <div class="paragraph">
-<p>+
-Fill in a search term in the search input. For instance "example" and hit kbd:[Enter].</p>
+<p>If you search for a word that isn&#8217;t in the document, the search result should be empty.</p>
 </div>
-<div class="paragraph">
-<p>+
-You should now get a search result with the document and the word you searched for highlighted.</p>
-</div>
-<div class="paragraph">
-<p>+
-If you search for a word that isn&#8217;t in the document, the search result should be empty.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>Now that you have your app up and running, it&#8217;s time to dive into the details.</p>
@@ -674,7 +676,7 @@ If you search for a word that isn&#8217;t in the document, the search result sho
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-09-15 08:27:12 UTC
+Last updated 2023-09-15 10:02:04 UTC
 </div>
 </div>
 </body>
