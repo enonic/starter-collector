@@ -80,7 +80,9 @@ Save the new collection.
 +
 Its time to give the collector a spin. From the collections list, simply click the btn:[green cloud download] icon.
 +
-This will start running the task from inside the collector app, using the url you filled in above. It should complete within seconds, and the document count should increase to `1`.
+This will start the task in the collector app, fetch and index the page of the URL you filled in above.
+
+It should complete within seconds, and the document count should increase to `1`.
 +
 NOTE: If you don't see any changes, try refreshing, check the sandbox logs, or visit the `Journal` menu items - located just below `Collections` in the menu.
 +
@@ -88,7 +90,7 @@ NOTE: If you don't see any changes, try refreshing, check the sandbox logs, or v
 +
 Now that you have a collection with a document, you may search for it from the btn:[Documents] page.
 +
-To limit the search to only documents from a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.
+To limit the search to a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.
 +
 Fill in a search term in the search input. For instance "example" and hit kbd:[Enter].
 +
