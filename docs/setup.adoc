@@ -81,7 +81,7 @@ Save the new collection.
 Its time to give the collector a spin. From the collections list, simply click the btn:[green cloud download] icon.
 +
 This will start the task in the collector app, fetch and index the page of the URL you filled in above.
-
++
 It should complete within seconds, and the document count should increase to `1`.
 +
 NOTE: If you don't see any changes, try refreshing, check the sandbox logs, or visit the `Journal` menu items - located just below `Collections` in the menu.
