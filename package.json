@@ -1,11 +1,11 @@
 {
   "author": "Christian Andreas Westgaard <cwe@enonic.com>",
   "dependencies": {
-    "@enonic/js-utils": "1.5.4",
-    "get-value": "3.0.1",
+    "@enonic/js-utils": "^1.6.1",
+    "get-value": "^3.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "set-value": "4.1.0"
+    "set-value": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7",
@@ -50,7 +50,6 @@
     "@enonic-types/global": "^7.11.0",
     "@enonic-types/lib-node": "^7.11.0",
     "@enonic/global-polyfill": "^1",
-    "@enonic/semantic-ui-react-form": "^2",
     "@types/react": "^18.0.15",
     "babel-loader": "^9",
     "babel-plugin-array-includes": "^2",
@@ -59,11 +58,11 @@
     "glob": "^10",
     "path": "0.12.7",
     "q-i": "2.0.1",
-    "semantic-ui-react": "2.0.4",
-    "terser-webpack-plugin": "5.2.5",
+    "semantic-ui-react": "^2",
+    "terser-webpack-plugin": "^5.3.9",
     "typescript": "^5",
-    "webpack": "5.76.0",
-    "webpack-cli": "4.9.1"
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "private": true,
   "scripts": {
