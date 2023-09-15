@@ -582,7 +582,7 @@ Choose the sandbox created in the previous step (if you have multiple sandboxes)
 <li>
 <p>Log into the Enonic Admin</p>
 <div class="paragraph">
-<p>Open a web broswer and access the Enonic XP Dashboard at <a href="http://localhost:8080" class="bare">http://localhost:8080</a>, then click btn:[LOG IN AS GUEST], this will sign you in with super user pemissions.</p>
+<p>Open a web broswer and access the Enonic XP Dashboard at <a href="http://localhost:8080" class="bare">http://localhost:8080</a>, then click <b class="button">LOG IN AS GUEST</b>, this will sign you in with super user pemissions.</p>
 </div>
 </li>
 <li>
@@ -591,10 +591,10 @@ Choose the sandbox created in the previous step (if you have multiple sandboxes)
 <p>To actually use your new collector you also need to install Explorer itself.</p>
 </div>
 <div class="paragraph">
-<p>Open <code>XP menu</code> &#8594; <code>Applications</code> and click btn:[Install].</p>
+<p>Open <code>XP menu</code> &#8594; <code>Applications</code> and click <b class="button">Install</b>.</p>
 </div>
 <div class="paragraph">
-<p>Find Explorer in the list and click the btn:[Install] button.</p>
+<p>Find Explorer in the list and click the <b class="button">Install</b> button.</p>
 </div>
 <div class="paragraph">
 <p>With Explorer installed, you can open the Explorer admin from the XP menu: <code>XP menu</code> &#8594; <code>Explorer</code></p>
@@ -603,10 +603,10 @@ Choose the sandbox created in the previous step (if you have multiple sandboxes)
 <li>
 <p>Create collection</p>
 <div class="paragraph">
-<p>To try out the new collector, click the hamburger menu and select btn:[Collections].</p>
+<p>To try out the new collector, click the hamburger menu and select <b class="button">Collections</b>.</p>
 </div>
 <div class="paragraph">
-<p>Click the green bottom-right Create collection btn:[+] button. Fill in a name and select a Default language for the collection. For instance en-US.</p>
+<p>Click the green bottom-right Create collection <b class="button">+</b> button. Fill in a name and select a Default language for the collection. For instance en-US.</p>
 </div>
 <div class="paragraph">
 <p>Select the <code>Sample collector</code> in the collector dropdown.</p>
@@ -624,7 +624,7 @@ Choose the sandbox created in the previous step (if you have multiple sandboxes)
 <li>
 <p>Collect</p>
 <div class="paragraph">
-<p>Its time to give the collector a spin. From the collections list, simply click the btn:[green cloud download] icon.</p>
+<p>Its time to give the collector a spin. From the collections list, simply click the <b class="button">green cloud download</b> icon.</p>
 </div>
 <div class="paragraph">
 <p>This will start the task in the collector app, fetch and index the page of the URL you filled in above.</p>
@@ -648,13 +648,13 @@ If you don&#8217;t see any changes, try refreshing, check the sandbox logs, or v
 <li>
 <p>Search</p>
 <div class="paragraph">
-<p>Now that you have a collection with a document, you may search for it from the btn:[Documents] page.</p>
+<p>Now that you have a collection with a document, you may search for it from the <b class="button">Documents</b> page.</p>
 </div>
 <div class="paragraph">
-<p>To limit the search to a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.</p>
+<p>To limit the search to a single collection, open the Collections page and click the <b class="button">number</b> in the Documents column. This will open the Documents page with a filter for that collection.</p>
 </div>
 <div class="paragraph">
-<p>Fill in a search term in the search input. For instance "example" and hit kbd:[Enter].</p>
+<p>Fill in a search term in the search input. For instance "example" and hit <kbd>Enter</kbd>.</p>
 </div>
 <div class="paragraph">
 <p>You should now get a search result with the document and the word you searched for highlighted.</p>
@@ -676,7 +676,7 @@ If you don&#8217;t see any changes, try refreshing, check the sandbox logs, or v
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-09-15 10:02:04 UTC
+Last updated 2023-09-15 10:04:47 UTC
 </div>
 </div>
 </body>
