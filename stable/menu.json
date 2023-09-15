@@ -1,0 +1,23 @@
+{
+    "menuItems": [
+        {
+            "title": "Introduction",
+            "document": "index"
+        }, {
+            "title": "Setup",
+            "document": "setup"
+        }, {
+            "title": "Overview",
+            "document": "overview"
+        }, {
+            "title": "Document type",
+            "document": "doctype"
+        }, {
+            "title": "Form",
+            "document": "form"
+        }, {
+            "title": "Task",
+            "document": "task"
+        }
+    ]
+}

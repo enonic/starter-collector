@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<title>Building custom Collectors</title>
+<title>App dissection</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -436,11 +436,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building custom Collectors</h1>
+<h1>App dissection</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
+<li><a href="#collector_basics">Collector basics</a></li>
+<li><a href="#app_structure">App structure</a></li>
+<li><a href="#build_gradle">build.gradle</a></li>
 </ul>
 </div>
 </div>
@@ -448,7 +450,97 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic Explorer uses collectors to fetch content and index content from custom sources. This tutorial shows you how to build your own collector.</p>
+<p>This chapter covers the anatomy of the application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="collector_basics"><a class="link" href="#collector_basics">Collector basics</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A collector typically consists of the following items</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Document type(s)</dt>
+<dd>
+<p>For pre-defined indexing of different types of data</p>
+</dd>
+<dt class="hdlist1">Task</dt>
+<dd>
+<p>Which is the code that actually performs the job (and can be scheduled)</p>
+</dd>
+<dt class="hdlist1">Form</dt>
+<dd>
+<p>To enable configuration of a collector (on a per collection basis)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s dive into the details.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="app_structure"><a class="link" href="#app_structure">App structure</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In your project folder, you should find a file structure looking like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">Application file structure:</div>
+<div class="content">
+<pre class="highlight"><code class="language-files" data-lang="files">src/
+ main/
+  resources/
+   assets/ <i class="conum" data-value="1"></i><b>(1)</b>
+   tasks/ <i class="conum" data-value="2"></i><b>(2)</b>
+   collectors.json <i class="conum" data-value="3"></i><b>(3)</b>
+   documentTypes.json <i class="conum" data-value="4"></i><b>(4)</b>
+build.gradle <i class="conum" data-value="5"></i><b>(5)</b>
+gradle.properties <i class="conum" data-value="6"></i><b>(6)</b>
+webpack.config.babel.js <i class="conum" data-value="7"></i><b>(7)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>JavaScript assets for the collector form goes here</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The code which will perform the actual work goes here</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Declaration of collectors in the app</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Location of document types bundled with the collector</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Enonic app dependencies</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>App settings and name</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>JS build file</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="build_gradle"><a class="link" href="#build_gradle">build.gradle</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The main purpose of this file is to ensure you have the proper dependency setup. The essential part is using the right version of <code>lib-explorer</code></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -457,40 +549,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Basic knowledge about <a href="https://developer.enonic.com/docs/explorer">Explorer</a> is expected before you start this tutorial.
+Ensure you are using a version of <a href="https://github.com/enonic/lib-explorer">lib-explorer</a> that is supported by your version of Explorer.
 </td>
 </tr>
 </table>
 </div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlight"><code class="language-gradle" data-lang="gradle">...
+include 'com.enonic.lib:lib-explorer:4.0.0'
+...</code></pre>
 </div>
-</div>
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This tutorial will take you through the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Setting up your SDK</p>
-</li>
-<li>
-<p>Creating a collector from a template</p>
-</li>
-<li>
-<p>Deploying and using the collector</p>
-</li>
-<li>
-<p>The anatomy of a collector</p>
-</li>
-<li>
-<p>How to make it your own</p>
-</li>
-</ul>
 </div>
 <div class="paragraph">
-<p>Ready? Then its time to <a href="setup.ahtml">setup your development environment</a>.</p>
+<p>Next up we dive into <a href="doctypes.ahtml">Managed document types</a>.</p>
 </div>
 </div>
 </div>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<title>Building custom Collectors</title>
+<title>Managed document types</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -436,11 +436,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building custom Collectors</h1>
+<h1>Managed document types</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#bundling">Bundling</a></li>
 </ul>
 </div>
 </div>
@@ -448,19 +449,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic Explorer uses collectors to fetch content and index content from custom sources. This tutorial shows you how to build your own collector.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Basic knowledge about <a href="https://developer.enonic.com/docs/explorer">Explorer</a> is expected before you start this tutorial.
-</td>
-</tr>
-</table>
+<p>Diving into the topic of embedding document types with your collector.</p>
 </div>
 </div>
 </div>
@@ -468,29 +457,82 @@ Basic knowledge about <a href="https://developer.enonic.com/docs/explorer">Explo
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This tutorial will take you through the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Setting up your SDK</p>
-</li>
-<li>
-<p>Creating a collector from a template</p>
-</li>
-<li>
-<p>Deploying and using the collector</p>
-</li>
-<li>
-<p>The anatomy of a collector</p>
-</li>
-<li>
-<p>How to make it your own</p>
-</li>
-</ul>
+<p>Document types are used to control indexing of content. Applications may optionally include one or more document types. These are referred to as "managed", as opposed to document types that are edited directly from the Explorer admin UI.</p>
 </div>
 <div class="paragraph">
-<p>Ready? Then its time to <a href="setup.ahtml">setup your development environment</a>.</p>
+<p>Whenever a new verion of the collector app is deployed, the manage document types will be updated to the new version.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bundling"><a class="link" href="#bundling">Bundling</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When installing an application that contains document types, Explorer will automatically pick up and register them.</p>
+</div>
+<div class="paragraph">
+<p>All you need to do is adding a file called <code>documentTypes.json</code> in your app.</p>
+</div>
+<div class="paragraph">
+<p>Below is what the document type bundled with the starter looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/documentTypes.json:</div>
+<div class="content">
+<pre class="highlight"><code class="language-JSON" data-lang="JSON">[{
+	"_name": "starter_doctype",
+	"addFields": false,
+	"properties": [{
+		"active": true,
+		"enabled": true,
+		"fulltext": true,
+		"includeInAllText": true,
+		"max": 0,
+		"min": 0,
+		"name": "text",
+		"nGram": true,
+		"path": false,
+		"valueType": "string"
+	},{
+		"active": true,
+		"enabled": true,
+		"fulltext": true,
+		"includeInAllText": true,
+		"max": 0,
+		"min": 0,
+		"name": "title",
+		"nGram": true,
+		"path": false,
+		"valueType": "string"
+	},{
+		"active": true,
+		"enabled": true,
+		"fulltext": true,
+		"includeInAllText": false,
+		"max": 0,
+		"min": 1,
+		"name": "url",
+		"nGram": false,
+		"path": false,
+		"valueType": "string"
+	}]
+}]</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Each document type must have a globaly unique name to avoid conflicting with other document types. As such prefixing is highly recommended - i.e. <code>mycompany_doctypename</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>With the document types sorted out, let&#8217;s find out how you can configure your collector through a <a href="form.ahtml">form</a>.</p>
 </div>
 </div>
 </div>

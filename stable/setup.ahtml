@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<title>Building custom Collectors</title>
+<title>Setting up your development environment</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -436,11 +436,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building custom Collectors</h1>
+<h1>Setting up your development environment</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#create_a_sandbox">Create a sandbox</a></li>
+<li><a href="#create_the_app">Create the app</a></li>
+<li><a href="#build_deploy">Build &amp; deploy</a></li>
+<li><a href="#give_it_a_spin">Give it a spin</a></li>
 </ul>
 </div>
 </div>
@@ -448,7 +452,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic Explorer uses collectors to fetch content and index content from custom sources. This tutorial shows you how to build your own collector.</p>
+<p>In this chapter you will create, buid, deploy and run a collector based on a template.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Collectors are implemented as standard Enonic applications. This chapter will guide you through the basic steps of building your own custom collector.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -457,7 +469,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Basic knowledge about <a href="https://developer.enonic.com/docs/explorer">Explorer</a> is expected before you start this tutorial.
+The following steps will require <a href="https://developer.enonic.com/start">Enonic CLI</a> to be installed
 </td>
 </tr>
 </table>
@@ -465,32 +477,197 @@ Basic knowledge about <a href="https://developer.enonic.com/docs/explorer">Explo
 </div>
 </div>
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<h2 id="create_a_sandbox"><a class="link" href="#create_a_sandbox">Create a sandbox</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This tutorial will take you through the following:</p>
+<p>A sandbox is a local developer instance of our platform - Enonic XP.</p>
 </div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Setting up your SDK</p>
+<p>Create a sandbox called <code>mycollector</code> by running this command in your terminal:</p>
+<div class="literalblock">
+<div class="content">
+<pre>enonic sandbox create mycollector</pre>
+</div>
+</div>
 </li>
 <li>
-<p>Creating a collector from a template</p>
+<p>Choose the latest version of Enonic XP (default).</p>
 </li>
 <li>
-<p>Deploying and using the collector</p>
+<p>Start the sandbox with this command:</p>
+<div class="literalblock">
+<div class="content">
+<pre>enonic sandbox start --dev mycollector</pre>
+</div>
+</div>
 </li>
-<li>
-<p>The anatomy of a collector</p>
-</li>
-<li>
-<p>How to make it your own</p>
-</li>
-</ul>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Dev mode is used to automatically load changes in your code when developing.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create_the_app"><a class="link" href="#create_the_app">Create the app</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>From a <strong>new terminal window</strong>, run the following command to create the application.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>enonic project create -r starter-collector</pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Choose the sandbox created in the previous step (if you have multiple sandboxes).
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This command uses the <a href="https://github.com/enonic/starter-collector" target="_blank" rel="noopener">Collector starter</a> Github repo  as a starter (template) for the app.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="build_deploy"><a class="link" href="#build_deploy">Build &amp; deploy</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>From the app folder you created (i.e. <code>myproject/</code>), run this command:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>enonic project deploy</pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Ready? Then its time to <a href="setup.ahtml">setup your development environment</a>.</p>
+<p>The application should now compile, and deploy to the sandbox.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="give_it_a_spin"><a class="link" href="#give_it_a_spin">Give it a spin</a></h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log into the Enonic Admin</p>
+<div class="paragraph">
+<p>Open a web broswer and access the Enonic XP Dashboard at <a href="http://localhost:8080" class="bare">http://localhost:8080</a>, then click btn:[LOG IN AS GUEST], this will sign you in with super user pemissions.</p>
+</div>
+</li>
+<li>
+<p>Install Explorer</p>
+<div class="paragraph">
+<p>To actually use your new collector you also need to install Explorer itself.</p>
+</div>
+<div class="paragraph">
+<p>Open <code>XP menu</code> &#8594; <code>Applications</code> and click btn:[Install].</p>
+</div>
+<div class="paragraph">
+<p>Find Explorer in the list and click the btn:[Install] button.</p>
+</div>
+<div class="paragraph">
+<p>With Explorer installed, you can open the Explorer admin from the XP menu: <code>XP menu</code> &#8594; <code>Explorer</code></p>
+</div>
+</li>
+<li>
+<p>Create collection</p>
+<div class="paragraph">
+<p>To try out the new collector, click the hamburger menu and select btn:[Collections].</p>
+</div>
+<div class="paragraph">
+<p>Click the green bottom-right Create collection btn:[+] button. Fill in a name and select a Default language for the collection. For instance en-US.</p>
+</div>
+<div class="paragraph">
+<p>Select the <code>Sample collector</code> in the collector dropdown.</p>
+</div>
+<div class="paragraph">
+<p>After selecting the collector, a simple form will appear. This form was bundled with your collector and can be customized to your needs. As you will see laster.</p>
+</div>
+<div class="paragraph">
+<p>Fill in the URL field with this value: <code><a href="https://example.com" class="bare">https://example.com</a></code></p>
+</div>
+<div class="paragraph">
+<p>Save the new collection.</p>
+</div>
+</li>
+<li>
+<p>Collect</p>
+<div class="paragraph">
+<p>Its time to give the collector a spin. From the collections list, simply click the btn:[green cloud download] icon.</p>
+</div>
+<div class="paragraph">
+<p>This will start the task in the collector app, fetch and index the page of the URL you filled in above.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It should complete within seconds, and the document count should increase to <code>1</code>.</p>
+</div>
+<div class="paragraph">
+<p>+
+NOTE: If you don&#8217;t see any changes, try refreshing, check the sandbox logs, or visit the <code>Journal</code> menu items - located just below <code>Collections</code> in the menu.</p>
+</div>
+<div class="paragraph">
+<p>+
+. Search</p>
+</div>
+<div class="paragraph">
+<p>+
+Now that you have a collection with a document, you may search for it from the btn:[Documents] page.</p>
+</div>
+<div class="paragraph">
+<p>+
+To limit the search to a single collection, open the Collections page and click the btn:[number] in the Documents column. This will open the Documents page with a filter for that collection.</p>
+</div>
+<div class="paragraph">
+<p>+
+Fill in a search term in the search input. For instance "example" and hit kbd:[Enter].</p>
+</div>
+<div class="paragraph">
+<p>+
+You should now get a search result with the document and the word you searched for highlighted.</p>
+</div>
+<div class="paragraph">
+<p>+
+If you search for a word that isn&#8217;t in the document, the search result should be empty.</p>
+</div>
+<div class="paragraph">
+<p>Now that you have your app up and running, it&#8217;s time to dive into the details.</p>
+</div>
+<div class="paragraph">
+<p>Continue to <a href="overview.ahtml">the overview chapter</a>.</p>
 </div>
 </div>
 </div>

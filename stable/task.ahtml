@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<title>Building custom Collectors</title>
+<title>Collector task</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -436,11 +436,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building custom Collectors</h1>
+<h1>Collector task</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#task">Task</a></li>
+<li><a href="#collectors_json">Collectors.json</a></li>
+<li><a href="#task_schema">Task schema</a></li>
+<li><a href="#task_controller">Task controller</a>
+<ul class="sectlevel2">
+<li><a href="#constructor">Constructor</a></li>
+<li><a href="#persisting">Persisting</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -448,7 +457,163 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic Explorer uses collectors to fetch content and index content from custom sources. This tutorial shows you how to build your own collector.</p>
+<p>In this chapter you will learn about tasks, the heart of a collector</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Collectors essentially build on a standard feature of the Enonic framework - tasks. Tasks provide out-of-the-box support for running background jobs with ease. Also, tasks can be scheduled via the Enonic framework.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="task"><a class="link" href="#task">Task</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Tasks are essentially JS controllers, following a specific pattern.</p>
+</div>
+<div class="paragraph">
+<p>Your app contains an example task within in the following file structure:</p>
+</div>
+<div class="listingblock">
+<div class="title">Application code:</div>
+<div class="content">
+<pre class="highlight"><code class="language-files" data-lang="files">src/
+ main/
+  resources/
+   tasks/
+    sample-collector/ <i class="conum" data-value="1"></i><b>(1)</b>
+     sample-collector.ts <i class="conum" data-value="2"></i><b>(2)</b>
+     sample-collector.xml <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The task folder</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The task controller: Same name as folder</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The task schema. Same name as folder</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more detais on tasks, visit the <a href="https://developer.enonic.com/docs/xp/stable/framework/tasks">task documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="collectors_json"><a class="link" href="#collectors_json">Collectors.json</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The task must be explicitly declared in the <code>collectors.json</code> file.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The task name is the name of the collector, it must be unique within the app. Changing the name of the task will break the link between Explorer and the collector.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">/src/main/resources/collectors.json</div>
+<div class="content">
+<pre class="highlight"><code class="language-JSON" data-lang="JSON">[{
+	"displayName": "Sample Collector (Edit in collectors.json)",
+	"formLibraryName": "SampleCollector",
+	"formAssetPath": "collector/form/SampleCollector.esm.js",
+	"taskName": "sample-collector"
+}]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see from the above file, the task name is listed per collector definition.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="task_schema"><a class="link" href="#task_schema">Task schema</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The task schema is defined in <code>sample-collector.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>This file basically defines an interface for tasks. It should basically look the same for all collectors (remember, you may have multiple collectors within a single app).</p>
+</div>
+<div class="paragraph">
+<p>The following fields are defined:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">collectionId</dt>
+<dd>
+<p>Which collection is calling the collector</p>
+</dd>
+<dt class="hdlist1">collectorId</dt>
+<dd>
+<p>Registered ID of this collector</p>
+</dd>
+<dt class="hdlist1">configJson</dt>
+<dd>
+<p>Configuration based on the collector form</p>
+</dd>
+<dt class="hdlist1">language</dt>
+<dd>
+<p>Default language, as specified by the collector</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This is what the schema looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">/src/main/resources/tasks/collect/collect.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;task&gt;
+	&lt;description&gt;Sample Collector (edit in sample-collector.xml)&lt;/description&gt;
+	&lt;form&gt;
+		&lt;input name="collectionId" type="TextLine"&gt;
+			&lt;label&gt;Collection ID&lt;/label&gt;
+			&lt;occurrences minimum="0" maximum="1"/&gt;
+		&lt;/input&gt;
+		&lt;input name="collectorId" type="TextLine"&gt;
+			&lt;label&gt;Collector ID&lt;/label&gt;
+			&lt;occurrences minimum="1" maximum="1"/&gt;
+		&lt;/input&gt;
+		&lt;input name="configJson" type="TextLine"&gt;
+			&lt;label&gt;Config JSON&lt;/label&gt;
+			&lt;occurrences minimum="1" maximum="1"/&gt;
+		&lt;/input&gt;
+		&lt;input name="language" type="TextLine"&gt;
+			&lt;label&gt;Language&lt;/label&gt;
+			&lt;occurrences minimum="0" maximum="1"/&gt;
+		&lt;/input&gt;
+	&lt;/form&gt;
+&lt;/task&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="task_controller"><a class="link" href="#task_controller">Task controller</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The actual task controller supplied by the starter is called <code>sample-collector.ts</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -457,40 +622,87 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Basic knowledge about <a href="https://developer.enonic.com/docs/explorer">Explorer</a> is expected before you start this tutorial.
+This task controller is written in TypeScript, and will be compiled to JavaScript by the build script.
 </td>
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>This tutorial will take you through the following:</p>
+<p>We&#8217;ll not dive into the exact details of how the controller gets its data, but rather look at the two most common parts of any collector task:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Setting up your SDK</p>
-</li>
-<li>
-<p>Creating a collector from a template</p>
-</li>
-<li>
-<p>Deploying and using the collector</p>
-</li>
-<li>
-<p>The anatomy of a collector</p>
-</li>
-<li>
-<p>How to make it your own</p>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="constructor"><a class="link" href="#constructor">Constructor</a></h3>
+<div class="paragraph">
+<p>Every collector needs to implement the <code>run()</code> function, and accept the standard parameters - as defined above.</p>
+</div>
+<div class="listingblock">
+<div class="title">/src/main/resources/tasks/collect/collect.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-TypeScript" data-lang="TypeScript">import {Collector} from '/lib/explorer';
+
+export function run({
+    collectionId,
+    collectorId,
+    configJson,
+    language
+}) {
+    const collector = new Collector&lt;CollectorConfig&gt;({
+        collectionId, collectorId, configJson, language
+    });
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="persisting"><a class="link" href="#persisting">Persisting</a></h3>
+<div class="paragraph">
+<p>Another common element for any collector is to store documents in Explorer, for indexing and search.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Remember, a document is essentially a JSON file.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example code for persisting a document</div>
+<div class="content">
+<pre class="highlight"><code class="language-TypeScript" data-lang="TypeScript">collector.persistDocument(documentToPersist, {
+        documentTypeName: 'starter_doctype'
+    });
+    collector.addSuccess({
+        message: "Sweet, it worked"
+    });
+} catch (e) {
+    log.error(`message:${e.message}`, e);
+    collector.addError({message: `${e.message}`});
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Feel free to study the full task controller code for more details.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Ready? Then its time to <a href="setup.ahtml">setup your development environment</a>.</p>
+<p>For an extensive task example - check out the <a href="https://github.com/enonic/app-explorer/tree/master/src/main/resources/tasks/webcrawl">Webcrawler collector code</a>. The Webcrawler is shipped with Explorer by default.</p>
+</div>
+<div class="paragraph">
+<p>Check out the <a href="https://developer.enonic.com/docs/explorer/">Collector API documentation</a> for a complete list of available functions.</p>
+</div>
 </div>
 </div>
 </div>
