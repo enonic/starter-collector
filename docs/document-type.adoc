@@ -1,4 +1,4 @@
-= Managed document types
+= Managed document type
 :toc: right
 :toclevels: 4
 

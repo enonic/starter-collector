@@ -58,7 +58,7 @@ include 'com.enonic.lib:lib-explorer:4.0.0'
 ...
 ----
 
-Next up we dive into <<doctypes#, Managed document types>>.
+Next up we dive into <<document-type#, Managed document types>>.
 
 
 
