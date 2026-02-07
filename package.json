@@ -61,7 +61,7 @@
     "semantic-ui-react": "^2",
     "terser-webpack-plugin": "^5.3.9",
     "typescript": "^5",
-    "webpack": "^5.94.0",
+    "webpack": "^5.105.0",
     "webpack-cli": "^5.1.4"
   },
   "private": true,
