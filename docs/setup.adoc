@@ -19,7 +19,7 @@ A sandbox is a local developer instance of our platform - Enonic XP.
 
   enonic sandbox create mycollector
 
-. Choose the latest version of Enonic XP (default).
+. Choose the latest version of Enonic XP 7.
 . Start the sandbox with this command:
 
   enonic sandbox start --dev mycollector
@@ -30,7 +30,7 @@ TIP: Dev mode is used to automatically load changes in your code when developing
 
 From a **new terminal window**, run the following command to create the application.
 
-  enonic project create -r starter-collector
+  enonic project create -r starter-collector -b 4.x
 
 IMPORTANT: Choose the sandbox created in the previous step (if you have multiple sandboxes).
 

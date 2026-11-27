@@ -10,7 +10,7 @@ Detailed documentation on using this starter is available on the developer porta
 
 === Create project
 ```bash
-enonic project create -r enonic/starter-collector -v 1.0.0-SNAPSHOT -d <destination folder name>
+enonic project create -r enonic/starter-collector -b 4.x -v 1.0.0-SNAPSHOT -d <destination folder name>
 ```
 
 === Build and deploy

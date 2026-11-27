@@ -54,7 +54,7 @@ NOTE: Ensure you are using a version of https://github.com/enonic/lib-explorer[l
 [source,gradle]
 ----
 ...
-include 'com.enonic.lib:lib-explorer:4.0.0'
+include 'com.enonic.lib:lib-explorer:4.7.0'
 ...
 ----
 
