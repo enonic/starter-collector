@@ -15,7 +15,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7",
     "@babel/plugin-syntax-dynamic-import": "^7",
     "@babel/plugin-syntax-throw-expressions": "^7",
-    "@babel/plugin-transform-arrow-functions": "^7",
+    "@babel/plugin-transform-arrow-functions": "^8",
     "@babel/plugin-transform-block-scoped-functions": "^7",
     "@babel/plugin-transform-block-scoping": "^7",
     "@babel/plugin-transform-classes": "^7",
