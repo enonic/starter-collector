@@ -23,7 +23,7 @@
     "@babel/plugin-transform-destructuring": "^7",
     "@babel/plugin-transform-duplicate-keys": "^7",
     "@babel/plugin-transform-for-of": "^7",
-    "@babel/plugin-transform-function-name": "^7",
+    "@babel/plugin-transform-function-name": "^8",
     "@babel/plugin-transform-instanceof": "^7",
     "@babel/plugin-transform-literals": "^7",
     "@babel/plugin-transform-member-expression-literals": "^7",
