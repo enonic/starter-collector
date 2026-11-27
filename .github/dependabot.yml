@@ -15,9 +15,9 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 0
     assignees:
-      - "ComLock"
+      - "alansemenov"
     reviewers:
-      - "ComLock"
+      - "alansemenov"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
