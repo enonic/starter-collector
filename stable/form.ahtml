@@ -571,7 +571,7 @@ As part of the XP framework, files placed in <code>/src/main/resources/assets/</
 <p>Webpack is used to build the output files, this is where you need to make sure things are aligned with <code>collectors.json</code>.</p>
 </div>
 <div class="listingblock">
-<div class="title">webpack.config.babel.js</div>
+<div class="title">webpack.config.mjs</div>
 <div class="content">
 <pre class="highlight"><code class="language-JavaScript" data-lang="JavaScript">...
 const config = {
@@ -674,7 +674,7 @@ const config = {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-27 13:33:18 UTC
+Last updated 2026-11-27 14:50:05 UTC
 </div>
 </div>
 </body>

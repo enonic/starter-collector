@@ -501,7 +501,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
    enonic.yaml <i class="conum" data-value="5"></i><b>(5)</b>
 build.gradle <i class="conum" data-value="6"></i><b>(6)</b>
 gradle.properties <i class="conum" data-value="7"></i><b>(7)</b>
-webpack.config.babel.js <i class="conum" data-value="8"></i><b>(8)</b></code></pre>
+webpack.config.mjs <i class="conum" data-value="8"></i><b>(8)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -576,7 +576,7 @@ include 'com.enonic.lib:lib-explorer:5.0.0'
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-27 13:33:18 UTC
+Last updated 2026-11-27 14:50:05 UTC
 </div>
 </div>
 </body>
