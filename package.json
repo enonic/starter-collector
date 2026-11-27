@@ -38,7 +38,7 @@
     "@babel/plugin-transform-runtime": "^7",
     "@babel/plugin-transform-shorthand-properties": "^7",
     "@babel/plugin-transform-spread": "^7",
-    "@babel/plugin-transform-sticky-regex": "^7",
+    "@babel/plugin-transform-sticky-regex": "^8",
     "@babel/plugin-transform-template-literals": "^7",
     "@babel/plugin-transform-typeof-symbol": "^7",
     "@babel/plugin-transform-unicode-escapes": "^7",
