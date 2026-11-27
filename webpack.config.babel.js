@@ -44,9 +44,6 @@ const SS_EXTERNALS = [
 	'/lib/cache', // lib-explorer
 	/^\/lib\/http-client.*$/,
 
-	'/lib/util',
-	/^\/lib\/util\//,
-
 	/^\/lib\/xp\//
 ];
 
@@ -196,7 +193,8 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 			'json'
 		].map(ext => `.${ext}`)
 	},
-	stats: STATS
+	stats: STATS,
+	target: ['web', 'es5']
 };
 WEBPACK_CONFIG.push(SERVER_SIDE_ECMASCRIPT_CONFIG);
 

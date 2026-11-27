@@ -32,6 +32,8 @@ From a **new terminal window**, run the following command to create the applicat
 
   enonic project create -r starter-collector
 
+NOTE: This creates a collector for Explorer 5 and Enonic XP 8. For Explorer 4 and XP 7, choose XP 7 for the sandbox and create the app from the `xp7` branch of the starter: `enonic project create -r starter-collector -b xp7`
+
 IMPORTANT: Choose the sandbox created in the previous step (if you have multiple sandboxes).
 
 [TIP]

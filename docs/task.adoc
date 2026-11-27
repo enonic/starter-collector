@@ -1,7 +1,7 @@
 = Collector task
 :toc: right
 :toclevels: 4
-:enonicTasks: https://developer.enonic.com/docs/xp/stable/framework/tasks
+:enonicTasks: https://developer.enonic.com/docs/code/stable/background/tasks
 
 In this chapter you will learn about tasks, the heart of a collector
 
@@ -24,7 +24,7 @@ src/
    tasks/
     sample-collector/ //<1>
      sample-collector.ts //<2>
-     sample-collector.xml //<3>
+     sample-collector.yaml //<3>
 ----
 
 <1> The task folder
@@ -49,7 +49,7 @@ As you can see from the above file, the task name is listed per collector defini
 
 == Task schema
 
-The task schema is defined in `sample-collector.xml`.
+The task schema is defined in `sample-collector.yaml`.
 
 This file basically defines an interface for tasks. It should basically look the same for all collectors (remember, you may have multiple collectors within a single app).
 
@@ -62,10 +62,10 @@ language:: Default language, as specified by the collector
 
 This is what the schema looks like:
 
-./src/main/resources/tasks/collect/collect.xml
-[,xml]
+./src/main/resources/tasks/sample-collector/sample-collector.yaml
+[,yaml]
 ----
-include::../src/main/resources/tasks/sample-collector/sample-collector.xml[]
+include::../src/main/resources/tasks/sample-collector/sample-collector.yaml[]
 ----
 
 == Task controller

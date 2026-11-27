@@ -2,7 +2,7 @@ plugins {
 	id 'java' // Needed for assemble and build
 	//id 'maven' // When is this needed?
 	id 'maven-publish' // Provides publishing and publishToMavenLocal
-	id 'com.enonic.xp.app' version '4.2.0'
+	id 'com.enonic.xp.app'
 	//id 'com.moowork.node' version '1.3.1'
 	id 'com.github.node-gradle.node' version '7.1.0'
 }
@@ -10,46 +10,37 @@ plugins {
 
 repositories {
 	mavenLocal()
-	xp.enonicRepo('dev')
+	xp.enonicRepo()
 	mavenCentral()
 }
 
 
-app {
-	name = project.appName
-	displayName = "${appDisplayName}"
-	vendorName = 'Enonic AS'
-	vendorUrl = 'http://enonic.com'
-	systemVersion = "${xpVersion}"
-}
-
-
 dependencies {
-	implementation "com.enonic.xp:core-api:${xpVersion}"
-	implementation "com.enonic.xp:portal-api:${xpVersion}"
+	implementation xplibs.api.core
+	implementation xplibs.api.portal
 
 	//──────────────────────────────────────────────────────────────────────────
 	// Core libs (com.enonic.xp)
 	//──────────────────────────────────────────────────────────────────────────
 
-	include "com.enonic.xp:lib-admin:${xpVersion}"
-	include "com.enonic.xp:lib-auth:${xpVersion}"
-	//include "com.enonic.xp:lib-cluster:${xpVersion}"
-	//include "com.enonic.xp:lib-common:${xpVersion}"
-	//include "com.enonic.xp:lib-content:${xpVersion}"
-	include "com.enonic.xp:lib-context:${xpVersion}"
-	include "com.enonic.xp:lib-event:${xpVersion}" // Needed by lib-explorer
-	//include "com.enonic.xp:lib-i18n:${xpVersion}"
-	//include "com.enonic.xp:lib-io:${xpVersion}"
-	//include "com.enonic.xp:lib-mail:${xpVersion}"
-	//include "com.enonic.xp:lib-mustache:${xpVersion}"
-	include "com.enonic.xp:lib-node:${xpVersion}"
-	//include "com.enonic.xp:lib-portal:${xpVersion}"
-	include "com.enonic.xp:lib-repo:${xpVersion}"
-	include "com.enonic.xp:lib-task:${xpVersion}"
-	//include "com.enonic.xp:lib-thymeleaf:${xpVersion}"
-	//include "com.enonic.xp:lib-websocket:${xpVersion}"
-	//include "com.enonic.xp:lib-xslt:${xpVersion}"
+	include xplibs.admin
+	include xplibs.auth
+	//include xplibs.cluster
+	//include xplibs.common
+	//include xplibs.content
+	include xplibs.context
+	include xplibs.event // Needed by lib-explorer
+	//include xplibs.i18n
+	//include xplibs.io
+	//include xplibs.mail
+	//include xplibs.mustache
+	include xplibs.node
+	//include xplibs.portal
+	include xplibs.repo
+	include xplibs.task
+	//include xplibs.thymeleaf
+	//include xplibs.websocket
+	//include xplibs.xslt
 
 	//──────────────────────────────────────────────────────────────────────────
 	// Other enonic libs (com.enonic.lib)
@@ -61,8 +52,7 @@ dependencies {
 	//include 'com.enonic.lib:menu:1.3.3'
 	//include 'com.enonic.lib:text-encoding:1.2.0'
 
-	include 'com.enonic.lib:lib-explorer:4.5.0' // version number must be here or dependabot will not upgrade it
-	include 'com.enonic.lib:lib-util:3.1.1'
+	include 'com.enonic.lib:lib-explorer:5.0.0' // version number must be here or dependabot will not upgrade it
 
 	// WARNING: Do NOT use include files, jar file will be missing dependencies!
 }

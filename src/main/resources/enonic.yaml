@@ -1,0 +1,5 @@
+kind: "Application"
+title: "Collector Starter (Edit in enonic.yaml)"
+description: "A simple collector (Edit in enonic.yaml)"
+vendorName: "Acme Inc"
+vendorUrl: "http://example.com"

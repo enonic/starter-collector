@@ -30,18 +30,20 @@ src/
    tasks/ <2>
    collectors.json <3>
    documentTypes.json <4>
-build.gradle <5>
-gradle.properties <6>
-webpack.config.babel.js <7>
+   enonic.yaml <5>
+build.gradle <6>
+gradle.properties <7>
+webpack.config.babel.js <8>
 ----
 
 <1> JavaScript assets for the collector form goes here
 <2> The code which will perform the actual work goes here
 <3> Declaration of collectors in the app
 <4> Location of document types bundled with the collector
-<5> Enonic app dependencies
-<6> App settings and name
-<7> JS build file
+<5> App title and description
+<6> Enonic app dependencies
+<7> App name, version and XP version
+<8> JS build file
 
 
 == build.gradle
@@ -54,7 +56,7 @@ NOTE: Ensure you are using a version of https://github.com/enonic/lib-explorer[l
 [source,gradle]
 ----
 ...
-include 'com.enonic.lib:lib-explorer:4.0.0'
+include 'com.enonic.lib:lib-explorer:5.0.0'
 ...
 ----
 
