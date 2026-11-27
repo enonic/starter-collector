@@ -33,7 +33,7 @@ src/
    enonic.yaml <5>
 build.gradle <6>
 gradle.properties <7>
-webpack.config.babel.js <8>
+webpack.config.mjs <8>
 ----
 
 <1> JavaScript assets for the collector form goes here

@@ -56,7 +56,7 @@ collector/
 
 Webpack is used to build the output files, this is where you need to make sure things are aligned with `collectors.json`.
 
-.webpack.config.babel.js
+.webpack.config.mjs
 [source,JavaScript]
 ----
 ...

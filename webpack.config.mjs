@@ -1,11 +1,14 @@
 /* eslint-disable no-console */
 import { EsbuildPlugin } from 'esbuild-loader';
 import { globSync } from 'glob';
+import { createRequire } from 'module';
 import path from 'path';
 import { print } from 'q-i';
 // import TerserPlugin from 'terser-webpack-plugin';
 
 import webpack from 'webpack';
+
+const corejsVersion = createRequire(import.meta.url)('core-js-pure/package.json').version;
 
 if (process.env.LOG_LEVEL_FROM_GRADLE === 'INFO') {
 	print({NODE_ENV: process.env.NODE_ENV});
@@ -48,15 +51,15 @@ const SS_EXTERNALS = [
 ];
 
 const SS_ALIAS = {
-	'@enonic/js-utils': path.resolve(__dirname, './node_modules/@enonic/js-utils/dist/cjs/index.js')
-	//myGlobal: path.resolve(__dirname, 'src/main/resources/global')
+	'@enonic/js-utils': path.resolve(import.meta.dirname, './node_modules/@enonic/js-utils/dist/cjs/index.js')
+	//myGlobal: path.resolve(import.meta.dirname, 'src/main/resources/global')
 };
 
 if (MODE === 'production') {
 	SS_EXTERNALS.push(/^\/lib\/explorer/);
 	SS_EXTERNALS.push(/^\/lib\/explorer\/.*/);
 } else {
-	SS_ALIAS['/lib/explorer'] = path.resolve(__dirname, '../lib-explorer/src/main/resources/lib/explorer/');
+	SS_ALIAS['/lib/explorer'] = path.resolve(import.meta.dirname, '../lib-explorer/src/main/resources/lib/explorer/');
 }
 
 const GLOB_EXTENSIONS_SERVER = '{ts,js}';
@@ -77,7 +80,7 @@ const ENTRY_SERVER = dict(FILES_SERVER.map(k => [
 // print(ENTRY_SERVER, { maxItems: Infinity });
 
 const SERVER_SIDE_ECMASCRIPT_CONFIG = {
-	context: path.resolve(__dirname, DIR_SRC),
+	context: path.resolve(import.meta.dirname, DIR_SRC),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: ENTRY_SERVER,
 	externals: SS_EXTERNALS,
@@ -92,72 +95,27 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 			use: [{
 				loader: 'babel-loader',
 				options: {
-					babelrc: false, // The .babelrc file should only be used to transpile config files.
+					babelrc: false,
 					comments: false,
 					compact: false,
 					minified: false,
 					plugins: [
-						'@babel/plugin-transform-arrow-functions',
-						'@babel/plugin-proposal-class-properties',
-						'@babel/plugin-proposal-export-default-from', // export v from 'mod'; // I think it adds a default export
-						'@babel/plugin-proposal-export-namespace-from', // export * as ns from 'mod';
-						'@babel/plugin-proposal-object-rest-spread',
-						'@babel/plugin-syntax-dynamic-import', // Allow parsing of import()
-						'@babel/plugin-syntax-throw-expressions',
-						'@babel/plugin-transform-block-scoped-functions',
-						'@babel/plugin-transform-block-scoping',
-						'@babel/plugin-transform-classes', // tasks/syncSite/Progress.es
-						'@babel/plugin-transform-computed-properties',
-						'@babel/plugin-transform-destructuring',
-						'@babel/plugin-transform-duplicate-keys',
-						'@babel/plugin-transform-for-of',
-						'@babel/plugin-transform-function-name',
-						'@babel/plugin-transform-instanceof',
-						'@babel/plugin-transform-literals',
-						'@babel/plugin-transform-new-target',
-						'@babel/plugin-transform-member-expression-literals',
-						'@babel/plugin-transform-modules-commonjs', // transforms ECMAScript modules to CommonJS
-						'@babel/plugin-transform-object-assign', // Not used locally, perhaps in node_modules?
-						'@babel/plugin-transform-object-super',
-						'@babel/plugin-transform-parameters',
-						'@babel/plugin-transform-property-literals',
-						'@babel/plugin-transform-property-mutators',
-						'@babel/plugin-transform-reserved-words',
-						'@babel/plugin-transform-shorthand-properties',
-						'@babel/plugin-transform-spread',
-						'@babel/plugin-transform-sticky-regex',
-						'@babel/plugin-transform-template-literals',
-						'@babel/plugin-transform-typeof-symbol',
-						'@babel/plugin-transform-unicode-escapes', // This plugin is included in @babel/preset-env
-						'@babel/plugin-transform-unicode-regex',
-						'array-includes'
+						['polyfill-corejs3', { method: 'usage-pure', version: corejsVersion }]
 					], // plugins
 					presets: [
 						'@babel/preset-typescript',
 						[
 							'@babel/preset-env',
 							{
-								corejs: 3, // Needed when useBuiltIns: usage
-
 								// Enables all transformation plugins and as a result,
 								// your code is fully compiled to ES5
-								forceAllTransforms: true,
-
-								targets: {
-									esmodules: false, // Enonic XP doesn't support ECMAScript Modules
-
-									// https://node.green/
-									node: '0.10.48'
-									//node: '5.12.0'
-
-								},
-
-								//useBuiltIns: false // no polyfills are added automatically
-								useBuiltIns: 'entry' // replaces direct imports of core-js to imports of only the specific modules required for a target environment
-								//useBuiltIns: 'usage' // polyfills will be added automatically when the usage of some feature is unsupported in target environment
+								forceAllTransforms: true
 							}
 						]
-					] // presets
+					], // presets
+					targets: {
+						node: '0.10'
+					}
 				} // options
 			}] // use
 		}] // rules
@@ -170,12 +128,16 @@ const SERVER_SIDE_ECMASCRIPT_CONFIG = {
 	output: {
 		filename: '[name].js',
 		libraryTarget: 'commonjs',
-		path: path.join(__dirname, DIR_DST)
+		path: path.join(import.meta.dirname, DIR_DST)
 	},
 	performance: {
 		hints: false
 	},
 	plugins: [
+		new webpack.BannerPlugin({
+			banner: "var globalThis = (1, eval)('this');",
+			raw: true
+		})
 		/*new webpack.ProvidePlugin({
 			global: '@enonic/global-polyfill'
 		})*/
@@ -207,7 +169,7 @@ const ES_BUILD_TARGET = 'es2015';
 const DST_ASSETS_DIR = 'build/resources/main/assets';
 
 const CLIENT_SIDE_ES_CONFIG = {
-	context: path.join(__dirname, DIR_SRC_ASSETS, 'collector', 'form'),
+	context: path.join(import.meta.dirname, DIR_SRC_ASSETS, 'collector', 'form'),
 	devtool: false, // Don't waste time generating sourceMaps
 	entry: {
 		'SampleCollector': './SampleCollectorForm.tsx'
@@ -258,7 +220,7 @@ const CLIENT_SIDE_ES_CONFIG = {
 			name: '[name]',
 			type: "global"
 		},
-		path: path.join(__dirname, DST_ASSETS_DIR, 'collector', 'form')
+		path: path.join(import.meta.dirname, DST_ASSETS_DIR, 'collector', 'form')
 	},
 	performance: {
 		hints: false
