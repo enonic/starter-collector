@@ -2,7 +2,7 @@
   "author": "Christian Andreas Westgaard <cwe@enonic.com>",
   "dependencies": {
     "@enonic/js-utils": "^1.6.1",
-    "get-value": "^3.0.1",
+    "get-value": "^4.1.0",
     "react": "^18",
     "react-dom": "^18",
     "set-value": "^4.1.0"
