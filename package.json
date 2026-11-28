@@ -3,7 +3,7 @@
   "dependencies": {
     "@enonic/js-utils": "^2.1.0",
     "get-value": "^4.1.0",
-    "react": "^18",
+    "react": "^19",
     "react-dom": "^18",
     "set-value": "^4.1.0"
   },
@@ -15,7 +15,7 @@
     "@enonic-types/lib-explorer": "5.0.0",
     "@enonic-types/lib-node": "^8.1.1",
     "@enonic/global-polyfill": "^1",
-    "@types/react": "^18.0.15",
+    "@types/react": "^19.3.2",
     "babel-loader": "^10",
     "babel-plugin-polyfill-corejs3": "^1",
     "core-js-pure": "^3",
